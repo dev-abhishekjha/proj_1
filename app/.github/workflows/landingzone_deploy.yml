@@ -1,0 +1,163 @@
+name: Deploy Services
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+      runner_os:
+        required: true
+        type: string
+
+      branchName:
+        required: true
+        type: string
+
+    outputs:
+      image_tag:
+        description: "Docker image tag"
+        value: ${{ jobs.build-and-push.outputs.IMAGE_TAG }}
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      BRANCH_NAME: ${{ inputs.branchName }}
+    outputs:
+      IMAGE_TAG: ${{ steps.set_image_tag.outputs.IMAGE_TAG }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: "${{ env.BRANCH_NAME }}"
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine Image Tag Based on Environment
+        id: set_image_tag
+        run: |
+          if [[ "$ENVIRONMENT" == "uat" || "$ENVIRONMENT" == "prod" ]]; then
+            IMAGE_TAG="${{ github.ref_name }}"
+          else
+            IMAGE_TAG="${{ github.run_number }}"
+          fi
+
+          echo "IMAGE_TAG=${IMAGE_TAG}" | tee -a $GITHUB_ENV
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+          echo "NAMESPACE=${{ vars.NAMESPACE }}" >> $GITHUB_ENV 
+          echo "CONFIG_FILE=${{ vars.CONFIG_FILE }}" >> $GITHUB_ENV 
+          echo "Deploying to: $ENVIRONMENT"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker Image
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          echo "REPO_NAME=${REPO_NAME}"
+          docker build \
+            --build-arg REPO_NAME="$REPO_NAME" \
+            --build-arg COMMIT_HASH=$(git rev-parse --short "$GITHUB_SHA") \
+            --build-arg ENVIRONMENT=${{ env.ENVIRONMENT }} \
+            --build-arg GITHUB_LOGIN=${{ secrets.USERNAME }} \
+            --build-arg GITHUB_TOKEN=${{ secrets.TOKEN }} \
+            --build-arg REPO_TOKEN=${{ secrets.REPO_TOKEN }} \
+            --build-arg CONFIG_FILE=${{ vars.CONFIG_FILE }} \
+            --build-arg HTTP_PORT=${{ vars.HTTP_PORT }} \
+            --build-arg GRPC_PORT=${{ vars.GRPC_PORT }} \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -t ${{ secrets.ECR_REPO_URI }}/${{ vars.AWS_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
+            -f Dockerfile .
+
+          docker push ${{ secrets.ECR_REPO_URI }}/${{ vars.AWS_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          echo "image=${{ secrets.ECR_REPO_URI }}/${{ vars.AWS_ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}" >> $GITHUB_ENV
+
+  k8s-update-service:
+    needs: build-and-push
+    runs-on: ${{ inputs.runner_os }}
+    environment:
+      name: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      BRANCH_NAME: ${{ inputs.branchName }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: "${{ env.BRANCH_NAME }}"
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare Deployment Files
+        run: |
+          mkdir -p eks
+          export DEPLOYMENT_NAME=${{ vars.DEPLOYMENT_NAME }}
+          export NAMESPACE=${{ vars.NAMESPACE }}
+          export K8S_CONTAINER=${{ vars.K8S_CONTAINER }}
+          export ECR_REPO_URI=${{ secrets.ECR_REPO_URI }}
+          export AWS_ECR_REPOSITORY=${{ vars.AWS_ECR_REPOSITORY }}
+          export IMAGE_TAG=${{ needs.build-and-push.outputs.IMAGE_TAG }}
+          export HTTP_PORT=${{ vars.HTTP_PORT }}
+          export GRPC_PORT=${{ vars.GRPC_PORT }}
+          export REQUEST_CPU=${{ vars.REQUEST_CPU }}
+          export REQUEST_MEM=${{ vars.REQUEST_MEM }}
+          export REQUEST_EPM=${{ vars.REQUEST_EPM }}
+          export LIMIT_CPU=${{ vars.LIMIT_CPU }}
+          export LIMIT_MEM=${{ vars.LIMIT_MEM }}
+          export LIMIT_EPM=${{ vars.LIMIT_EPM }}
+          export ontology=${{ vars.ontology }}
+          export HPA_NAME=${{ vars.HPA_NAME }}
+          export MIN_REPLICAS=${{ vars.MIN_REPLICAS }}
+          export MAX_REPLICAS=${{ vars.MAX_REPLICAS }}
+          export SECRET_PROVIDER_CLASS_NAME=${{ vars.SECRET_PROVIDER_CLASS_NAME }}
+          export SERVICE_ACCOUNT_NAME=${{ vars.SERVICE_ACCOUNT_NAME }}
+
+          echo "Using IMAGE_TAG=${IMAGE_TAG}"
+          envsubst < k8s/dfti-deployment.yml > eks/deployment.yml
+          echo "Deployment file prepared"
+
+      - name: Setup SSH Key for Bastion
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.BASTION_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.BASTION_IP }} >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/id_rsa ${{ secrets.BASTION_USER }}@${{ secrets.BASTION_IP }} "mkdir -p ${{ vars.NAMESPACE }}/${{ github.repository }}/eks"
+
+      - name: Copy Deployment Files to Server
+        shell: bash
+        run: |
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa" eks/deployment.yml \
+            ${{ secrets.BASTION_USER }}@${{ secrets.BASTION_IP }}:${{ vars.NAMESPACE }}/${{ github.repository }}/eks/
+
+      - name: Execute Deployment on Server
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.BASTION_USER }}@${{ secrets.BASTION_IP }} << 'EOF'
+            set -e
+            DEPLOY_PATH="${{ vars.NAMESPACE }}/${{ github.repository }}"
+            cd $DEPLOY_PATH/eks
+            kubectl apply -f deployment.yml
+            kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.NAMESPACE }}
+          EOF
+
+      - name: Cleanup SSH Key
+        run: rm -f ~/.ssh/id_rsa

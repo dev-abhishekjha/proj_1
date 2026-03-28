@@ -1,0 +1,115 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${DEPLOYMENT_NAME}
+  namespace: ${NAMESPACE}
+  labels:
+    app: ${K8S_CONTAINER}
+spec:
+  replicas: ${MIN_REPLICAS}
+  selector:
+    matchLabels:
+      app: ${K8S_CONTAINER}
+  template:
+    metadata:
+      labels:
+        app: ${K8S_CONTAINER}
+    spec:
+      serviceAccountName: ${SERVICE_ACCOUNT_NAME}
+      automountServiceAccountToken: false
+      containers:
+        - name: ${K8S_CONTAINER}
+          image: ${ECR_REPO_URI}/${AWS_ECR_REPOSITORY}:${IMAGE_TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: ${HTTP_PORT}
+            - containerPort: ${GRPC_PORT}
+          resources:
+            requests:
+              cpu: "${REQUEST_CPU}"
+              memory: "${REQUEST_MEM}"
+              ephemeral-storage: "${REQUEST_EPM}"
+            limits:
+              cpu: "${LIMIT_CPU}"
+              memory: "${LIMIT_MEM}"
+              ephemeral-storage: "${LIMIT_EPM}"
+          # readinessProbe:
+          #   httpGet:
+          #     path: /boilerplate/health
+          #     port: ${HTTP_PORT}
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   failureThreshold: 3
+          # livenessProbe:
+          #   httpGet:
+          #     path: /boilerplate/health
+          #     port: ${HTTP_PORT}
+          #   initialDelaySeconds: 20
+          #   periodSeconds: 15
+          #   timeoutSeconds: 5
+          #   failureThreshold: 3
+          volumeMounts:
+            - name: secrets-store-inline
+              mountPath: "/mnt/secrets"
+              readOnly: true
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "${SECRET_PROVIDER_CLASS_NAME}"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${ontology}
+  namespace: ${NAMESPACE}
+  labels:
+    app: ${K8S_CONTAINER}
+spec:
+  type: ClusterIP
+  selector:
+    app: ${K8S_CONTAINER}
+  ports:
+    - name: http
+      port: ${HTTP_PORT}
+      targetPort: ${HTTP_PORT}
+    - name: grpc
+      port: ${GRPC_PORT}
+      targetPort: ${GRPC_PORT}
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${HPA_NAME}
+  namespace: ${NAMESPACE}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${DEPLOYMENT_NAME}
+  minReplicas: ${MIN_REPLICAS}
+  maxReplicas: ${MAX_REPLICAS}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+    scaleUp:
+      stabilizationWindowSeconds: 120
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70

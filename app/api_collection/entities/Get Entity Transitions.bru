@@ -1,0 +1,37 @@
+meta {
+  name: Get Entity Transitions
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{ontology_host}}/ontology/v1/entities/transitions?from_entity_id=1&to_entity_id=2&page=1&page_size=10
+  body: none
+  auth: none
+}
+
+params:query {
+  from_entity_id: 1
+  to_entity_id: 2
+  transition_type: ""
+  created_at_from: ""
+  created_at_to: ""
+  page: 1
+  page_size: 10
+}
+
+headers {
+  x-scope: entities:view entities:manage
+}
+
+docs {
+  Get transitions between entities with filters and pagination.
+  
+  Filters:
+  - `from_entity_id`: Filter by source entity ID
+  - `to_entity_id`: Filter by destination entity ID
+  
+  Pagination:
+  - `page`: Page number (default 1)
+  - `page_size`: Items per page (default 10)
+}

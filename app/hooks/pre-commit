@@ -1,0 +1,10 @@
+echo "running pre-commit hook"
+
+if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+    echo "do not commit in main branch, create separate branch and create a pull request"
+    exit 1
+fi
+
+# to reformat the code before commit
+make fmt
+make vet

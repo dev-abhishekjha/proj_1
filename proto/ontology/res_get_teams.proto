@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/teams
+
+message ResponseGetTeams {
+    message Team {
+        int64 id = 1;
+        string name = 2;
+        string slack_channel = 3;
+        string oncall_email = 4;
+        string role_name = 5;
+    }
+
+    message Pagination {
+        int32 current_page = 1;
+        int32 page_size = 2;
+        int64 total_count = 3;
+        int32 total_pages = 4;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Team result = 3;
+    Pagination pagination = 4;
+}

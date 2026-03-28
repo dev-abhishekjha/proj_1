@@ -1,0 +1,46 @@
+meta {
+  name: Get KPI Relationships
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{ontology_host}}/ontology/v1/kpi-relationships?kpi_id=1&relation_type=impacts&target_type=feature&target_id=101&weight_set_by=rajat@fyscaltech.com&weight_reviewed_by=&created_at_from=2026-02-01T00:00:00Z&created_at_to=2026-02-01T23:59:59Z&page=1&page_size=10
+  body: none
+  auth: none
+}
+
+params:query {
+  kpi_id: 1
+  relation_type: impacts
+  target_type: feature
+  target_id: 101
+  weight_set_by: rajat@fyscaltech.com
+  weight_reviewed_by: 
+  created_at_from: 2026-02-01T00:00:00Z
+  created_at_to: 2026-02-01T23:59:59Z
+  page: 1
+  page_size: 10
+}
+
+headers {
+  x-scope: kpis:view kpis:manage
+}
+
+docs {
+  Get KPI Relationships with filters and pagination.
+  
+  Filters:
+  - `kpi_id`: Filter by KPI ID
+  - `relation_type`: Filter by relation type
+  - `target_type`: Filter by target type
+  - `target_id`: Filter by target ID
+  - `weight_set_by`: Filter by user who set the weight
+  - `weight_reviewed_by`: Filter by user who reviewed the weight
+  - `created_at_from`: Filter by creation date from (ISO8601)
+  - `created_at_to`: Filter by creation date to (ISO8601)
+  
+  Pagination:
+  - `page`: Page number (default 1)
+  - `page_size`: Items per page (default 10)
+}

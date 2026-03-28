@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/services/deployments
+
+message ResponseGetServiceDeployments {
+    message ServiceDeployment {
+        string id = 1;
+        int64 service_id = 2;
+        string environment = 3;
+        string version = 4;
+        string commit_hash = 5;
+        string deployed_at = 6;
+    }
+
+    message Pagination {
+        string next_cursor = 1;
+        string previous_cursor = 2;
+        bool has_next = 3;
+        bool has_previous = 4;
+        int32 limit = 5;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated ServiceDeployment result = 3;
+    Pagination pagination = 4;
+}

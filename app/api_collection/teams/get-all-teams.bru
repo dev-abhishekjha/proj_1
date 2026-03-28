@@ -1,0 +1,42 @@
+meta {
+  name: Get All Teams
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ontology_host}}/ontology/v1/teams
+  body: none
+  auth: none
+}
+
+params:query {
+  ~name: Platform
+  ~slack_channel: #platform
+  ~oncall_email: platform@company.com
+  ~created_at_from: 2024-01-01T00:00:00Z
+  ~created_at_to: 2026-12-31T23:59:59Z
+  ~page: 1
+  ~limit: 10
+}
+
+headers {
+  X-Scope: teams:view
+}
+
+docs {
+  # Get All Teams
+  
+  Retrieves a paginated list of teams with optional filters.
+  
+  ## Filters
+  - `name` (string)
+  - `slack_channel` (string)
+  - `oncall_email` (string)
+  - `created_at_from` (RFC3339 timestamp)
+  - `created_at_to` (RFC3339 timestamp)
+  
+  ## Pagination
+  - `page`: Page number (default from server)
+  - `limit`: Page size (default from server)
+}

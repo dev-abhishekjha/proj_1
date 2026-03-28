@@ -1,0 +1,28 @@
+name: stg-ft Deployment
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - stg-ft-*
+
+jobs:
+  deploy-to-stg-ft:
+    name: Deploy to stg-ft Environment
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: stg-ft
+      branchName: main
+    secrets: inherit
+
+  notify-slack:
+    name: Slack Notifications
+    needs: deploy-to-stg-ft
+    if: always()
+    uses: ./.github/workflows/slack_notify.yml
+    with:
+      environment: stg-ft
+      conclusion: ${{ needs.deploy-to-stg-ft.result }}
+      image_tag: ${{ needs.deploy-to-stg-ft.outputs.image_tag }}
+      commit_id: ${{ github.sha }}
+    secrets: inherit

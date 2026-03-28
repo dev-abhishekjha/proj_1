@@ -1,0 +1,35 @@
+meta {
+  name: Get Entity APIs
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{ontology_host}}/ontology/v1/entities/:entity_id/apis?page=1&page_size=10
+  body: none
+  auth: none
+}
+
+params:path {
+  entity_id: 1
+}
+
+params:query {
+  page: 1
+  page_size: 10
+}
+
+headers {
+  x-scope: entities:view entities:manage
+}
+
+docs {
+  Get APIs linked to a specific entity.
+  
+  Path Params:
+  - `entity_id`: The ID of the entity to fetch APIs for.
+  
+  Query Params:
+  - `page`: Page number for pagination (default: 1)
+  - `page_size`: Number of records per page (default: 10)
+}

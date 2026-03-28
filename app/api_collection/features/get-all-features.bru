@@ -1,0 +1,24 @@
+meta {
+  name: Get All Features
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/ontology/v1/features
+  body: none
+  auth: none
+}
+
+params:query {
+  ~page: 1
+  ~limit: 10
+}
+
+headers {
+  X-Scope: features:view
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:4441
+}

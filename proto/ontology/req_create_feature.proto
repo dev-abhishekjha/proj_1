@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// POST: /v1/features
+
+message RequestCreateFeature {
+    string code = 1;
+    string name = 2;
+    string description = 3;
+    bool is_active = 4;
+}

@@ -1,0 +1,44 @@
+meta {
+  name: Get Entities
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ontology_host}}/ontology/v1/entities?feature_id=101&code=USER_REG&name=User Registration&is_start=true&is_terminal=false&created_at_from=2026-03-11T00:00:00Z&created_at_to=2026-03-11T23:59:59Z&page=1&page_size=10
+  body: none
+  auth: none
+}
+
+params:query {
+  feature_id: 101
+  code: USER_REG
+  name: User Registration
+  is_start: true
+  is_terminal: false
+  created_at_from: 2026-03-11T00:00:00Z
+  created_at_to: 2026-03-11T23:59:59Z
+  page: 1
+  page_size: 10
+}
+
+headers {
+  x-scope: entities:view entities:manage
+}
+
+docs {
+  Get entities with filters and pagination.
+  
+  Filters:
+  - `feature_id`: Filter by feature ID
+  - `code`: Filter by entity code
+  - `name`: Filter by entity name (partial match)
+  - `is_start`: Filter by start status
+  - `is_terminal`: Filter by terminal status
+  - `created_at_from`: Filter by creation date from (ISO8601)
+  - `created_at_to`: Filter by creation date to (ISO8601)
+  
+  Pagination:
+  - `page`: Page number (default 1)
+  - `page_size`: Items per page (default 10)
+}

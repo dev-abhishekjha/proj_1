@@ -1,0 +1,27 @@
+name: Staging Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-to-staging:
+    name: Deploy to Staging Environment
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: stg
+      branchName: main
+    secrets: inherit
+
+  notify-slack:
+    name: Slack Notifications
+    needs: deploy-to-staging
+    if: always()
+    uses: ./.github/workflows/slack_notify.yml
+    with:
+      environment: stg
+      conclusion: ${{ needs.deploy-to-staging.result }}
+      image_tag: ${{ needs.deploy-to-staging.outputs.image_tag }}
+      commit_id: ${{ github.sha }}
+    secrets: inherit

@@ -1,0 +1,54 @@
+ServerPort: 4441
+GrpcPort: 4442
+AppName: "ontology"
+AppVersion: "0.0.1"
+BaseUrl: "http://localhost:4441"
+OtlpExporterUrl: "localhost:4318"
+Environment: "local" # local, stg, production
+Redis:
+  host: "localhost"
+  port: 6379
+  username: ""
+  password: ""
+  tls_enabled: true
+
+Database:
+  master_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/ontology?sslmode=disable"
+  slave_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/ontology?sslmode=disable"
+
+Notification:
+  protocol: "grpc" # grpc, http 
+  http_host: "http://localhost:4701"
+  grpc_host: "localhost:4702"
+
+FeatureFlag:
+  audit_log: true
+
+ClickHouse:
+  enabled: true
+  dsn: "tcp://clickhouse:clickhouse@localhost:9000/ontology?dial_timeout=5s&read_timeout=10s"
+
+SQS:
+  region: "us-east-1"
+  events:
+    custom_data_creation:
+      topic: "custom_data_create_v1"
+      queue: "custom_data_create_v1"
+    entity_user_data_creation:
+      topic: "entity_user_data_creation_v1"
+      queue: "entity_user_data_creation_v1"
+    entity_business_data_creation:
+      topic: "entity_business_data_creation_v1"
+      queue: "entity_business_data_creation_v1"
+    entity_document_creation:
+      topic: "entity_document_creation_v1"
+      queue: "entity_document_creation_v1"
+    entity_location_creation:
+      topic: "entity_location_creation_v1"
+      queue: "entity_location_creation_v1"
+    entity_risk_score_creation:
+      topic: "entity_risk_score_creation_v1"
+      queue: "entity_risk_score_creation_v1"
+    entity_relationship_creation:
+      topic: "entity_relationship_creation_v1"
+      queue: "entity_relationship_creation_v1"

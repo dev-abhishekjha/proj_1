@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/services/{service_id}/apis
+
+message ResponseGetServiceApis {
+    message Api {
+        int64 id = 1;
+        string endpoint = 2;
+        string http_method = 3;
+        bool is_internal = 4;
+        string description = 5;
+        string version = 6;
+        string created_at = 7;
+    }
+
+    message Pagination {
+        int32 current_page = 1;
+        int32 page_size = 2;
+        int64 total_count = 3;
+        int32 total_pages = 4;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Api data = 3;
+    Pagination pagination = 4;
+}

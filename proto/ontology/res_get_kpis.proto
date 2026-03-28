@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/kpis
+
+message ResponseGetKpis {
+    message Kpi {
+        int64 id = 1;
+        string code = 2;
+        string name = 3;
+        string description = 4;
+        string metric_type = 5;
+        string unit = 6;
+        string created_at = 7;
+        string updated_at = 8;
+    }
+
+    message Pagination {
+        int32 current_page = 1;
+        int32 page_size = 2;
+        int64 total_count = 3;
+        int32 total_pages = 4;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Kpi result = 3;
+    Pagination pagination = 4;
+}

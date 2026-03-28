@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// POST: /v1/entities
+
+message RequestCreateEntity {
+    int64 feature_id = 1;
+    string code = 2;
+    string name = 3;
+    string description = 4;
+    int32 display_order = 5;
+    bool is_start = 6;
+    bool is_terminal = 7;
+    repeated int64 api_ids = 8;
+}

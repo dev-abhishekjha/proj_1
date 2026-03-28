@@ -1,0 +1,50 @@
+name: Slack Notifications
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      conclusion:
+        required: true
+        type: string
+      commit_id:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string
+
+jobs:
+  send-slack-notification:
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      CONCLUSION: ${{ inputs.conclusion }}
+      COMMIT_ID: ${{ inputs.commit_id }}
+      IMAGE_TAG: ${{ inputs.image_tag }}
+      REPOSITORY: ${{ github.repository }}
+      SLACK_WEBHOOK: ${{ vars.SLACK_WEBHOOK_URL }}
+
+    steps:
+      - name: Send Slack Notification 📢
+        run: |
+          if [ "${CONCLUSION}" = "success" ]; then
+            STATUS="Success ✅"
+          else
+            STATUS="Failed 🚨"
+          fi
+          
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Deployment Status: '"${STATUS}"'*\n- *Repository*: `'"${REPOSITORY}"'`\n- *Environment*: `'"${ENVIRONMENT}"'`\n- *Image Tag*: `'"${IMAGE_TAG}"'`\n- *Commit ID:* `'"${COMMIT_ID}"'`"
+                }
+              }
+            ]
+          }' "${SLACK_WEBHOOK}"

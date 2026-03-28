@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/entities
+
+message ResponseGetEntities {
+    message Entity {
+        int64  id          = 1;
+        int64  feature_id  = 2;
+        string code        = 3;
+        string description = 4;
+        int32  display_order = 5;
+        string name        = 6;
+        bool   is_start    = 7;
+        bool   is_terminal = 8;
+        string created_at  = 9;
+        string updated_at  = 10;
+    }
+
+    message Pagination {
+        int32 current_page = 1;
+        int32 page_size    = 2;
+        int64 total_count  = 3;
+        int32 total_pages  = 4;
+    }
+
+    string code    = 1;
+    string message = 2;
+    repeated Entity data       = 3;
+    Pagination      pagination  = 4;
+}

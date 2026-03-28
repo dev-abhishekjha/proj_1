@@ -1,0 +1,29 @@
+name: UAT Deployment
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - uat-*
+
+jobs:
+  deploy-to-uat:
+    name: Deploy to UAT environment
+    uses: ./.github/workflows/landingzone_deploy.yml
+    with:
+      environment: uat
+      runner_os: sm-uat-hosted
+      branchName: main
+    secrets: inherit
+
+  notify-slack:
+    name: Send Slack Notification
+    needs: deploy-to-uat
+    if: always()
+    uses: ./.github/workflows/slack_notify.yml
+    with:
+      environment: uat
+      conclusion: ${{ needs.deploy-to-uat.result }}
+      image_tag: ${{ needs.deploy-to-uat.outputs.image_tag }}
+      commit_id: ${{ github.sha }}
+    secrets: inherit

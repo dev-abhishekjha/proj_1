@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/features/{feature_id}
+
+message RequestUpdateFeature {
+    optional string name = 1;
+    optional string description = 2;
+    optional bool is_active = 3;
+}

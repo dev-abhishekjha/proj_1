@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/apis/{api_id}/metrics
+
+message ResponseGetApiMetrics {
+    message ApiMetric {
+        string window_start = 1;
+        int32 window_minutes = 2;
+        int64 total_count = 3;
+        double success_rate = 4;
+        double failure_rate = 5;
+        double p50_duration_ms = 6;
+        double p95_duration_ms = 7;
+        double p99_duration_ms = 8;
+        string created_at = 9;
+    }
+
+    message Pagination {
+        string next_cursor     = 1;
+        string previous_cursor = 2;
+        bool   has_next        = 3;
+        bool   has_previous    = 4;
+        int32  limit           = 5;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated ApiMetric result = 3;
+    Pagination pagination = 4;
+}

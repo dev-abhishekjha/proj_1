@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/features/{feature_id}/metrics
+
+message ResponseGetFeatureMetrics {
+    message FeatureMetric {
+        string window_start = 1;
+        int32 window_minutes = 2;
+        int64 total_count = 3;
+        double success_rate = 4;
+        double failure_rate = 5;
+        double p50_duration_ms = 6;
+        double p95_duration_ms = 7;
+        double p99_duration_ms = 8;
+        string created_at = 9;
+    }
+
+    string code = 1;
+    string message = 2;
+    FeatureMetric result = 3;
+}
