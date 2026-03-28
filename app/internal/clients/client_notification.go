@@ -22,7 +22,7 @@ type ClientNotificationMethods interface {
 
 func NewClientNotification(access *clientAccess) (*ClientNotification, error) {
 	// Get notification service address from config
-	notificationAddr := access.cfg.Notification.GrpcHost
+	notificationAddr := access.cfg.Notification.GrpcHost + ":" + access.cfg.Notification.GrpcPort
 	if notificationAddr == "" {
 		return nil, fmt.Errorf("notification service address not configured")
 	}
