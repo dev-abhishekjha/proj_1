@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/features
+
+message ResponseGetFeatures {
+    message Feature {
+        int64 id = 1;
+        string code = 2;
+        string name = 3;
+        string description = 4;
+        bool is_active = 5;
+        string created_at = 6;
+        string updated_at = 7;
+    }
+
+    message Pagination {
+        int32 current_page = 1;
+        int32 page_size = 2;
+        int64 total_count = 3;
+        int32 total_pages = 4;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Feature result = 3;
+    Pagination pagination = 4;
+}

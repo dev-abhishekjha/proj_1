@@ -1,0 +1,97 @@
+image: atlassian/default-image:latest
+
+options:
+  max-time: 20 # timeout set to 20 minutes for each step
+
+definitions:
+  caches:
+    go: ~/.cache/go-build
+    sonar: ~/.sonar/cache
+
+  services:
+    docker:
+      memory: 5120
+
+  steps:
+    - step:
+        &sync-github-mirror # https://blog.idrsolutions.com/how-to-sync-bitbucket-repo-to-github/
+        image: alpine/git:latest
+        name: sync github mirror
+        clone:
+          enabled: false
+        script:
+          - git clone --bare "git@bitbucket.org:$BITBUCKET_WORKSPACE/$BITBUCKET_REPO_SLUG.git"
+          - cd "$BITBUCKET_REPO_SLUG.git"
+          - git push --mirror "git@github.com:$GITHUB_ORG/apollo-$BITBUCKET_REPO_SLUG.git"
+
+    - step: &build-and-check-sonarcloud
+        name: code quality check
+        runs-on:
+          - linux.arm64
+        size: 4x
+        allow_failure: true
+        services:
+          - docker
+        caches:
+          - go
+          - sonar
+        script:
+          - export DOCKER_RAMDISK=true
+          - pipe: sonarsource/sonarcloud-scan:4.0.0
+          - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
+
+    - step: &run-linter-and-tests
+        image: golang:1.23.4-alpine3.19
+        name: run linter and test cases
+        runs-on:
+          - linux.arm64
+        size: 4x
+        allow_failure: true
+        script:
+          - apk add --no-cache git bash make
+          - export GOPRIVATE="github.com/Smart-Communications"
+          - echo "machine github.com login $GITHUB_USER password $GITHUB_TOKEN" > ~/.netrc
+          - cp ./config/local.example.yml ./config/local.yml
+          - export GOTOOLCHAIN=auto
+          - make fmt && make vet
+          - go version
+          - go test ./... -v
+          - |
+            if [ -n "$(git status --porcelain)" ]; then
+              git add -A && git commit --no-verify -a -m "[skip ci] formatted code using pipeline" && git push
+            else
+              echo "No changes to commit"
+            fi
+
+pipelines:
+  pull-requests:
+    "**":
+      # - step: *build-and-check-sonarcloud
+      - step: *run-linter-and-tests
+
+  branches:
+    main:
+      - parallel:
+          # - step: *build-and-check-sonarcloud
+          - step:
+              <<: *sync-github-mirror
+              name: build & deploy to staging
+
+  tags:
+    stg-ft-*:
+      - step:
+          <<: *sync-github-mirror
+          name: build & deploy to stg-ft
+          deployment: stg-ft
+
+    uat-*:
+      - step:
+          <<: *sync-github-mirror
+          name: build & deploy to uat
+          deployment: uat
+
+    prod-*:
+      - step:
+          <<: *sync-github-mirror
+          name: build & deploy to prod
+          deployment: prod

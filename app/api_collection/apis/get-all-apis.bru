@@ -1,0 +1,32 @@
+meta {
+  name: Get All APIs
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/ontology/v1/apis
+  body: none
+  auth: none
+}
+
+params:query {
+  ~service_id: 
+  ~id: 
+  ~endpoint: 
+  ~method: 
+  ~protocol: 
+  ~is_internal: 
+  ~created_at_from: 
+  ~created_at_to: 
+  ~page: 1
+  ~limit: 10
+}
+
+headers {
+  X-Scope: apis:view
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:4441
+}

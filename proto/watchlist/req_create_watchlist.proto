@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+
+package types_watchlist;
+option go_package = "proto/types_watchlist";
+
+// POST: /oms/v1/watchlist
+message RequestCreateWatchlist {
+  string name = 1;
+}

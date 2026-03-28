@@ -1,0 +1,36 @@
+meta {
+  name: Create Team
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{ontology_host}}/ontology/v1/teams
+  body: json
+  auth: none
+}
+
+headers {
+  X-Scope: teams:manage
+}
+
+body:json {
+  {
+    "name": "Platform Team",
+    "slack_channel": "#platform",
+    "oncall_email": "platform@company.com"
+  }
+}
+
+script:post-response {
+  if (res.status === 200){
+    const jsonData = res.getBody();
+    bru.setEnvVar("team_id", jsonData.result.id);
+  }
+}
+
+docs {
+  # Create Team
+  
+  Creates a new team.
+}

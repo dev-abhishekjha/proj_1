@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/teams/{team_id}
+
+message ResponseUpdateTeam {
+    message Team {
+        int64 id = 1;
+        string name = 2;
+        string slack_channel = 3;
+        string oncall_email = 4;
+        string created_at = 5;
+        string updated_at = 6;
+    }
+
+    string code = 1;
+    string message = 2;
+    Team result = 3;
+}

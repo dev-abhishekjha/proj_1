@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/features/{feature_id}
+
+message ResponseUpdateFeature {
+    string code = 1;
+    string message = 2;
+    Result result = 3;
+
+    message Result {
+        int64 id = 1;
+        string name = 2;
+        string code = 3;
+        string description = 4;
+        bool is_active = 5;
+        string created_at = 6;
+        string updated_at = 7;
+    }
+}

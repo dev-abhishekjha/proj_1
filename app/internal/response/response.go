@@ -1,0 +1,56 @@
+package response
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+type ErrorResponse struct {
+	Code    string `json:"code,omitempty"`
+	Message string `json:"message,omitempty"`
+}
+
+func (e *ErrorResponse) Error() string {
+	if e.Code != "" && e.Message != "" {
+		return e.Code + ": " + e.Message
+	}
+	if e.Message != "" {
+		return e.Message
+	}
+	if e.Code != "" {
+		return e.Code
+	}
+	return "unknown error"
+}
+
+const (
+	APISuccessCode    = "00000"
+	APISuccessMessage = "success"
+)
+
+type SuccessResp struct {
+	Code    string      `json:"code"`
+	Message string      `json:"message"`
+	Result  interface{} `json:"result,omitempty"`
+}
+
+func SendApiResponseV1(ctx *gin.Context, apiResp interface{}, appErr *ApplicationError) {
+	if appErr != nil {
+		ctx.JSON(appErr.HttpCode, &ErrorResponse{
+			Code:    string(appErr.ErrorCode),
+			Message: appErr.ErrorMessage,
+		})
+		return
+	}
+
+	if apiResp != nil {
+		ctx.JSON(http.StatusOK, apiResp)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, SuccessResp{
+		Code:    APISuccessCode,
+		Message: APISuccessMessage,
+	})
+}

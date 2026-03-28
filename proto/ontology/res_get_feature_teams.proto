@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/teams/feature/{feature_id}
+
+message ResponseGetFeatureTeams {
+    message Team {
+        int64 team_id = 1;
+        string team_name = 2;
+        string role_name = 3;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Team result = 3;
+}

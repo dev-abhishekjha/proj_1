@@ -1,0 +1,29 @@
+name: prod deployment
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - prod-*
+
+jobs:
+  deploy-to-prod:
+    name: deploy to prod environment
+    uses: ./.github/workflows/landingzone_deploy.yml
+    with:
+      environment: prod
+      runner_os: sm-prod-hosted
+      branchName: main
+    secrets: inherit
+
+  notify-slack:
+    name: Send Slack Notification
+    needs: deploy-to-prod
+    if: always()
+    uses: ./.github/workflows/slack_notify.yml
+    with:
+      environment: prod
+      conclusion: ${{ needs.deploy-to-prod.result }}
+      image_tag: ${{ needs.deploy-to-prod.outputs.image_tag }}
+      commit_id: ${{ github.sha }}
+    secrets: inherit

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package types_watchlist;
+option go_package = "proto/types_watchlist";
+
+// POST: /oms/v1/watchlist
+message ResponseCreateWatchlist {
+    message Watchlist {
+        int64 id = 1;
+        string name = 2;
+        bool is_fav = 3;
+    }
+
+    string code = 1;
+    string message = 2;
+    Watchlist watchlist = 3;
+}

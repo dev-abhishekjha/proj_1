@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/entities/{entity_id}
+
+message RequestUpdateEntity {
+    optional string name = 1;
+    optional string description = 2;
+    optional string code = 3; // Not for FE to edit
+    optional int32 display_order = 4;
+    optional bool is_start = 5;
+    optional bool is_terminal = 6;
+    optional int64 feature_id = 7;
+    repeated int64 api_ids = 8;
+}

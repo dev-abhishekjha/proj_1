@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// POST: /v1/teams
+
+message RequestCreateTeam {
+    string name = 1;
+    string slack_channel = 2;
+    string oncall_email = 3; //Comma separated emails
+}

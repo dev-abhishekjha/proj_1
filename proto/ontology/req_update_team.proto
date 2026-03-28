@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/teams/{team_id}
+
+message RequestUpdateTeam {
+    optional string name = 1;
+    optional string slack_channel = 2;
+    optional string oncall_email = 3; //Comma separated emails
+}

@@ -1,0 +1,49 @@
+meta {
+  name: Get Service Deployments
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/ontology/v1/services/deployments?limit=10
+  body: none
+  auth: none
+}
+
+params:query {
+  limit: 10
+  ~service_id: 1
+  ~environment: prod
+  ~version: 1.0.2
+  ~commit_hash: abc123
+  ~deployed_at_from: 1704067200
+  ~deployed_at_to: 1735689599
+  ~cursor: eyJRdWVyeVBhcmFtTWFwIjp7fSwiQ3Vyc29yRmllbGRzUGFyYW1NYXAiOnsiZGVwbG95ZWRfYXQiOiIxNzczMTIzOTM0IiwiaWQiOiIxNSJ9LCJEaXJlY3Rpb24iOiJuZXh0IiwiU29ydEZpZWxkcyI6W10sIkxpbWl0IjoxMCwiUGFnZU51bWJlciI6Mn0=
+  ~limit: 10
+}
+
+headers {
+  X-Scope: services:view
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:4441
+}
+
+docs {
+  # Get Service Deployments
+  
+  Retrieves a list of service deployments from ClickHouse with cursor-based pagination.
+  
+  ## Filters
+  - `service_id` (int64)
+  - `environment` (string)
+  - `version` (string)
+  - `commit_hash` (string)
+  - `deployed_at_from` (unix timestamp in seconds)
+  - `deployed_at_to` (unix timestamp in seconds)
+  
+  ## Pagination
+  - `cursor`: Base64 encoded `deployed_at:id`
+  - `limit`: Number of items to return (default: 100)
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// PATCH: /v1/entities/{entity_id}
+
+message ResponseUpdateEntity {
+    string code = 1;
+    string message = 2;
+    Result result = 3;
+
+    message Result {
+        int64 id = 1;
+        int64 feature_id = 2;
+        string code = 3;
+        string name = 4;
+        string description = 5;
+        int32 display_order = 6;
+        bool is_start = 7;
+        bool is_terminal = 8;
+        string created_at = 9;
+        string updated_at = 10;
+    }
+}

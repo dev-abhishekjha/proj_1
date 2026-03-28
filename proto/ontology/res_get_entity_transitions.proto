@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package types_ontology;
+option go_package = "proto/types_ontology";
+
+// GET: /v1/entities/transitions
+
+message ResponseGetEntityTransitions {
+    message Transition {
+        int64  id = 1;
+        int64  from_entity_id = 2;
+        int64  to_entity_id = 3;
+        string condition_expression = 4;
+        string transition_type = 5;
+        string condition_description = 6;
+    }
+
+    string code = 1;
+    string message = 2;
+    repeated Transition result = 3;
+}
