@@ -6,6 +6,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import * as React from "react";
+import { format } from "date-fns";
 import {
   type DayButton,
   DayPicker,
@@ -39,8 +40,7 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+        formatMonthDropdown: (date) => format(date, "MMM"),
         ...formatters,
       }}
       classNames={{
@@ -196,7 +196,7 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString()}
+      data-day={format(day.date, "dd/MM/yyyy")}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

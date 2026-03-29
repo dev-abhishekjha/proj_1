@@ -10,9 +10,7 @@ export const protobufPackage = "types_ontology";
 
 export interface RequestUpdateTeam {
   name?: string | undefined;
-  slack_channel?:
-    | string
-    | undefined;
+  slack_channel?: string | undefined;
   /** Comma separated emails */
   oncall_email?: string | undefined;
 }

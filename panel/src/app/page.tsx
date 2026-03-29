@@ -1,19 +1,45 @@
-import { SidebarLayout } from "@/components/sidebar-layout";
+import About from "@/components/About";
+import Connect from "@/components/Connect";
+import CTABanner from "@/components/CTABanner";
+import DarshanTimings from "@/components/DarshanTimings";
+import DeitiesSlider from "@/components/DeitiesSlider";
+import Donate from "@/components/Donate";
+import FAQ from "@/components/FAQ";
+import FloatingActionButtons from "@/components/FloatingActionButtons";
+import FoodForLife from "@/components/FoodForLife";
+import Footer from "@/components/Footer";
+import FounderAcharya from "@/components/FounderAcharya";
+import Gallery from "@/components/Gallery";
+import Hero from "@/components/Hero";
+import MainNav from "@/components/MainNav";
+import TempleMap from "@/components/Map";
+import Programs from "@/components/Programs";
+import Shloka from "@/components/Shloka";
+import TopBar from "@/components/TopBar";
+import VedicCalendar from "@/components/VedicCalendar";
 
 export default function Home() {
   return (
-    <SidebarLayout>
-      <div className="flex flex-1 flex-col gap-4 px-6 py-[14px]">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-        </div>
-        <div className="flex-1 rounded-xl bg-muted/50 p-8">
-          <p className="text-muted-foreground">
-            Welcome to your dashboard. Use the sidebar to navigate to different
-            sections.
-          </p>
-        </div>
-      </div>
-    </SidebarLayout>
+    <main className="bg-[var(--bg)] text-[var(--text-primary)] font-serif">
+      <TopBar />
+      <MainNav />
+      <Hero />
+      <About />
+      <FounderAcharya />
+      <DarshanTimings />
+      <DeitiesSlider />
+      <Programs />
+      <FoodForLife />
+      <Gallery />
+      <Shloka />
+      <Donate />
+      <VedicCalendar />
+      <Connect />
+      <TempleMap />
+      <FAQ />
+      <CTABanner />
+      <Footer />
+      <FloatingActionButtons />
+    </main>
   );
 }

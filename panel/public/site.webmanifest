@@ -1,0 +1,21 @@
+{
+  "name": "ISKCON Greater Noida",
+  "short_name": "ISKCON GN",
+  "description": "Darshan timings, seva details, and temple information for ISKCON Greater Noida.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f0e2",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

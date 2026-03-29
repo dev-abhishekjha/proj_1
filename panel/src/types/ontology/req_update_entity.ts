@@ -10,9 +10,7 @@ export const protobufPackage = "types_ontology";
 
 export interface RequestUpdateEntity {
   name?: string | undefined;
-  description?:
-    | string
-    | undefined;
+  description?: string | undefined;
   /** Not for FE to edit */
   code?: string | undefined;
   display_order?: number | undefined;
