@@ -1,7 +1,6 @@
 package services
 
 import (
-	"app/ontology/internal/clients"
 	"app/ontology/internal/config"
 	"app/ontology/internal/repositories"
 
@@ -10,32 +9,19 @@ import (
 )
 
 type Services struct {
-	Health  ServiceHealthMethods
-	Entity  ServiceEntityMethods
-	Service ServiceServiceMethods
-	Team    ServiceTeamMethods
-	Feature ServiceFeatureMethods
-	Api     ServiceApiMethods
-	Kpi     ServiceKpiMethods
+	Health ServiceHealthMethods
 }
 
-func NewServices(cfg *config.Config, db *db.Store, r *repositories.Repositories, cs db.CacheStoreMethods, l log.Logger, c *clients.Clients) *Services {
+func NewServices(cfg *config.Config, db *db.Store, r *repositories.Repositories, cs db.CacheStoreMethods, l log.Logger) *Services {
 	access := &ServiceAccess{
 		Cfg:          cfg,
 		Db:           db,
 		Cache:        cs,
 		Logger:       l,
 		Repositories: *r,
-		Clients:      c,
 	}
 
 	return &Services{
-		Health:  NewServiceHealth(access),
-		Entity:  NewServiceEntity(access),
-		Service: NewServiceService(access),
-		Team:    NewServiceTeam(access),
-		Feature: NewServiceFeature(access),
-		Api:     NewServiceApi(access),
-		Kpi:     NewServiceKpi(access),
+		Health: NewServiceHealth(access),
 	}
 }

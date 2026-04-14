@@ -14,10 +14,4 @@ const (
 
 func (app *App) addRoutes(router *gin.Engine, middlewares *middlewares.Middlewares) {
 	app.addBaseRoutes(router, middlewares)
-	app.addServiceRoutes(router, middlewares)
-	app.addTeamRoutes(router, middlewares)
-	app.addFeatureRoutes(router, middlewares)
-	app.addApiRoutes(router, middlewares)
-	app.addEntityRoutes(router, middlewares)
-	app.addKpiRoutes(router, middlewares)
 }

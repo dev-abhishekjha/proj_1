@@ -7,13 +7,7 @@ import (
 )
 
 type Repositories struct {
-	Health  RepositoryHealthMethods
-	Entity  RepositoryEntityMethods
-	Service RepositoryServiceMethods
-	Team    RepositoryTeamMethods
-	Feature RepositoryFeatureMethods
-	Api     RepositoryApiMethods
-	Kpi     RepositoryKpiMethods
+	Health RepositoryHealthMethods
 }
 
 func NewRepositories(pos *db.Store, cacheDb db.CacheStoreMethods, logger log.Logger, fastCache db.DirtyCacheMethods, clickhouseDb *clickhouse.Store) *Repositories {
@@ -26,12 +20,6 @@ func NewRepositories(pos *db.Store, cacheDb db.CacheStoreMethods, logger log.Log
 	}
 
 	return &Repositories{
-		Health:  NewRepositoryHealth(access),
-		Entity:  NewRepositoryEntity(access),
-		Service: NewRepositoryService(access),
-		Team:    NewRepositoryTeam(access),
-		Feature: NewRepositoryFeature(access),
-		Api:     NewRepositoryApi(access),
-		Kpi:     NewRepositoryKpi(access),
+		Health: NewRepositoryHealth(access),
 	}
 }

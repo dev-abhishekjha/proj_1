@@ -8,13 +8,7 @@ import (
 )
 
 type Controllers struct {
-	Health  *ControllerHealth
-	Entity  ControllerEntityMethods
-	Service ControllerServiceMethods
-	Team    ControllerTeamMethods
-	Feature ControllerFeatureMethods
-	Api     ControllerApiMethods
-	Kpi     ControllerKpiMethods
+	Health *ControllerHealth
 }
 
 func NewControllers(cfg *config.Config, logger log.Logger, services *services.Services) *Controllers {
@@ -24,12 +18,6 @@ func NewControllers(cfg *config.Config, logger log.Logger, services *services.Se
 		Services: services,
 	}
 	return &Controllers{
-		Health:  NewControllerHealth(access),
-		Entity:  NewControllerEntity(access),
-		Service: NewControllerService(access),
-		Team:    NewControllerTeam(access),
-		Feature: NewControllerFeature(access),
-		Api:     NewControllerApi(access),
-		Kpi:     NewControllerKpi(access),
+		Health: NewControllerHealth(access),
 	}
 }

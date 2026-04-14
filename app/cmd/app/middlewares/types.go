@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"app/ontology/internal/clients"
 	"app/ontology/internal/config"
 	"app/ontology/internal/repositories"
 
@@ -14,6 +13,5 @@ type MiddlewareAccess struct {
 	Db           *db.Store
 	Cache        db.CacheStoreMethods
 	Logger       log.Logger
-	Clients      *clients.Clients
 	Repositories repositories.Repositories
 }
