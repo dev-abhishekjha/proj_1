@@ -2,7 +2,6 @@ package app
 
 import (
 	"app/ontology/cmd/app/middlewares"
-	"app/ontology/internal/clients"
 	"app/ontology/internal/config"
 	"app/ontology/internal/controllers"
 	"app/ontology/internal/repositories"
@@ -33,7 +32,6 @@ type App struct {
 	repos        *repositories.Repositories
 	networkOps   networks.NetworkOpsMethods
 
-	clients     *clients.Clients
 	controllers *controllers.Controllers
 	middlewares *middlewares.Middlewares
 	services    *services.Services
@@ -116,11 +114,10 @@ func (app *App) newApp(cfg *config.Config, l log.Logger) {
 
 	app.fastCache = db.NewDirtyCache(logger, &app.cache, cfg.AppName)
 	app.networkOps = networks.NewNetworkOps(cfg.AppName, logger)
-	app.clients = clients.NewClients(cfg, logger, app.cache, app.networkOps)
 	app.repos = repositories.NewRepositories(app.db, app.cache, logger, app.fastCache, app.clickhouseDb)
-	app.services = services.NewServices(cfg, app.db, app.repos, app.cache, logger, app.clients)
+	app.services = services.NewServices(cfg, app.db, app.repos, app.cache, logger)
 	app.controllers = controllers.NewControllers(cfg, logger, app.services)
-	app.middlewares = middlewares.NewMiddlewares(cfg, app.db, app.repos, app.cache, logger, app.clients)
+	app.middlewares = middlewares.NewMiddlewares(cfg, app.repos)
 	app.router = app.setUpHandlers(cfg, logger)
 	app.http = &http.Server{
 		Addr:         fmt.Sprintf(":%d", cfg.ServerPort),
