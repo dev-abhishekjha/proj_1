@@ -1,40 +1,34 @@
 package app
 
 import (
-	"app/ontology/internal/controllers"
+	"app/Saranam/internal/controllers"
+	"app/Saranam/pkg/log"
+	"app/Saranam/pkg/telemetry"
 	"context"
 	"fmt"
-
-	"bitbucket.org/fyscal/be-commons/pkg/log"
-	"bitbucket.org/fyscal/be-commons/pkg/telemetry"
-
-	//"bitbucket.org/fyscal/be-proto/go-proto/boiler_plate/rpc"
 	"net"
 
-	helloService "bitbucket.org/fyscal/be-proto/go-proto/boiler_plate/rpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-// setupGrpcServer creates and configures the gRPC server
-func (app *App) setupGrpcServer(grpcPort int, logger log.Logger, controllers *controllers.Controllers) *grpc.Server {
-	// Create gRPC server with options
-	// Used telemetry.NewGrpcServer wrapper to get the gRPC server with telemetry enabled
+// setupGrpcServer creates and configures the gRPC server.
+func (app *App) setupGrpcServer(grpcPort int, logger log.Logger, ctrls *controllers.Controllers) *grpc.Server {
 	grpcServer := telemetry.NewGrpcServer(
 		grpc.UnaryInterceptor(app.grpcUnaryInterceptor(logger)),
 	)
 
-	// Register services
-	helloService.RegisterHelloServiceServer(grpcServer, controllers.Health)
+	// Register service implementations here as they are added.
+	// e.g.: pb.RegisterFooServiceServer(grpcServer, ctrls.Foo)
 
-	// Enable reflection for tools like grpcurl
+	// Enable reflection for tools like grpcurl.
 	reflection.Register(grpcServer)
 
 	logger.Infof("gRPC server configured on port %d", grpcPort)
 	return grpcServer
 }
 
-// startGrpcServer starts the gRPC server
+// startGrpcServer starts the gRPC server on the given port.
 func (app *App) startGrpcServer(grpcPort int, logger log.Logger) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
@@ -48,12 +42,11 @@ func (app *App) startGrpcServer(grpcPort int, logger log.Logger) {
 	}
 }
 
-// grpcUnaryInterceptor provides logging and error handling for gRPC requests
+// grpcUnaryInterceptor provides logging and error handling for gRPC requests.
 func (app *App) grpcUnaryInterceptor(logger log.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		logger.Infof("gRPC method called: %s", info.FullMethod)
 
-		// Call the handler
 		resp, err := handler(ctx, req)
 
 		if err != nil {

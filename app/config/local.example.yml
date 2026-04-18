@@ -1,6 +1,6 @@
 ServerPort: 4441
 GrpcPort: 4442
-AppName: "ontology"
+AppName: "Saranam"
 AppVersion: "0.0.1"
 BaseUrl: "http://localhost:4441"
 OtlpExporterUrl: "localhost:4318"
@@ -13,8 +13,8 @@ Redis:
   tls_enabled: true
 
 Database:
-  master_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/ontology?sslmode=disable"
-  slave_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/ontology?sslmode=disable"
+  master_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/Saranam?sslmode=disable"
+  slave_database_dsn: "postgres://USERNAME:PASSWORD@localhost:5432/Saranam?sslmode=disable"
 
 Notification:
   protocol: "grpc" # grpc, http 
@@ -26,7 +26,7 @@ FeatureFlag:
 
 ClickHouse:
   enabled: true
-  dsn: "tcp://clickhouse:clickhouse@localhost:9000/ontology?dial_timeout=5s&read_timeout=10s"
+  dsn: "tcp://clickhouse:clickhouse@localhost:9000/Saranam?dial_timeout=5s&read_timeout=10s"
 
 SQS:
   region: "us-east-1"

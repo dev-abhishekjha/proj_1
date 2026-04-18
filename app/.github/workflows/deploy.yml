@@ -122,7 +122,7 @@ jobs:
           export LIMIT_CPU=${{ vars.LIMIT_CPU }}
           export LIMIT_MEM=${{ vars.LIMIT_MEM }}
           export LIMIT_EPM=${{ vars.LIMIT_EPM }}
-          export ontology=${{ vars.ontology }}
+          export Saranam=${{ vars.Saranam }}
           export HPA_NAME=${{ vars.HPA_NAME }}
           export MIN_REPLICAS=${{ vars.MIN_REPLICAS }}
           export MAX_REPLICAS=${{ vars.MAX_REPLICAS }}

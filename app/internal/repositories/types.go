@@ -1,15 +1,11 @@
 package repositories
 
 import (
-	"bitbucket.org/fyscal/be-commons/pkg/clickhouse"
-	"bitbucket.org/fyscal/be-commons/pkg/db"
-	"bitbucket.org/fyscal/be-commons/pkg/log"
+	"app/Saranam/pkg/db"
+	"app/Saranam/pkg/log"
 )
 
 type RepositoryAccess struct {
-	Db           *db.Store
-	Cache        db.CacheStoreMethods
-	Logger       log.Logger
-	FastCache    db.DirtyCacheMethods
-	ClickHouseDb *clickhouse.Store
+	Db     *db.Store
+	Logger log.Logger
 }

@@ -1,45 +1,34 @@
 package app
 
 import (
-	"app/ontology/cmd/app/middlewares"
-	"app/ontology/internal/config"
-	"app/ontology/internal/controllers"
-	"app/ontology/internal/repositories"
-	"app/ontology/internal/services"
+	"app/Saranam/cmd/app/middlewares"
+	"app/Saranam/internal/config"
+	"app/Saranam/internal/controllers"
+	"app/Saranam/internal/repositories"
+	"app/Saranam/internal/services"
+	"app/Saranam/pkg/db"
+	"app/Saranam/pkg/global"
+	"app/Saranam/pkg/log"
+	"app/Saranam/pkg/telemetry"
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
-	"bitbucket.org/fyscal/be-commons/pkg/clickhouse"
-	commonClients "bitbucket.org/fyscal/be-commons/pkg/clients"
-	"bitbucket.org/fyscal/be-commons/pkg/db"
-	"bitbucket.org/fyscal/be-commons/pkg/global"
-	"bitbucket.org/fyscal/be-commons/pkg/log"
-	networks "bitbucket.org/fyscal/be-commons/pkg/network"
-	"bitbucket.org/fyscal/be-commons/pkg/telemetry"
 	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
-	db           *db.Store
-	clickhouseDb *clickhouse.Store
-	cache        db.CacheStoreMethods
-	fastCache    db.DirtyCacheMethods
-	repos        *repositories.Repositories
-	networkOps   networks.NetworkOpsMethods
-
+	db          *db.Store
+	repos       *repositories.Repositories
 	controllers *controllers.Controllers
 	middlewares *middlewares.Middlewares
 	services    *services.Services
 	router      *gin.Engine
 	http        *http.Server
 	grpc        *grpc.Server
-	telemetry   telemetry.TelemetryUtilsMethods
-	sqsClient   commonClients.ClientSqsMethods
 }
 
 func (app *App) newDatabaseConnection(cfg *config.Config, logger log.Logger) {
@@ -50,38 +39,6 @@ func (app *App) newDatabaseConnection(cfg *config.Config, logger log.Logger) {
 	}
 }
 
-func (app *App) newCacheConnection(ctx context.Context, cfg *config.Config, logger log.Logger) {
-	var err error
-	host := cfg.Redis.Host
-	port := strconv.Itoa(cfg.Redis.Port)
-	username := cfg.Redis.Username
-	password := cfg.Redis.Password
-	tlsEnabled := cfg.Redis.TlsEnabled
-	app.cache, err = db.NewRedisClient(ctx, host, port, username, password, tlsEnabled, logger)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (app *App) newClickHouseConnection(cfg *config.Config, logger log.Logger) {
-	var err error
-	if !cfg.ClickHouse.Enabled {
-		logger.Infof("ClickHouse is disabled, skipping ClickHouse initialization")
-		return
-	}
-
-	if cfg.ClickHouse.DSN == "" {
-		panic(fmt.Errorf("ClickHouse is enabled but DSN not configured, skipping ClickHouse initialization"))
-	}
-
-	app.clickhouseDb, err = clickhouse.NewStore(logger, cfg.ClickHouse.DSN, cfg.AppName)
-	if err != nil {
-		panic(fmt.Errorf("click_house initialization failed: %w", err))
-	}
-
-	logger.Infof("ClickHouse connection initialized successfully")
-}
-
 func (app *App) setUpHandlers(cfg *config.Config, logger log.Logger) *gin.Engine {
 	var router *gin.Engine
 	if cfg.Environment == string(global.StageEnv) || cfg.Environment == string(global.ProdEnv) {
@@ -90,7 +47,6 @@ func (app *App) setUpHandlers(cfg *config.Config, logger log.Logger) *gin.Engine
 	}
 	router = gin.Default()
 	router.Use(app.middlewares.Cors.Handler())
-	app.telemetry.EnableGinTracing(router)
 	app.addRoutes(router, app.middlewares)
 	return router
 }
@@ -100,10 +56,7 @@ func (app *App) newApp(cfg *config.Config, l log.Logger) {
 	logger := l.With(ctx)
 
 	app.newDatabaseConnection(cfg, logger)
-	app.newClickHouseConnection(cfg, logger)
-	app.newSQSClient(cfg, logger)
-	app.newCacheConnection(ctx, cfg, logger)
-	app.telemetry = telemetry.NewTelemetryUtils(&telemetry.TelemetryUtils{
+	telemetry.NewTelemetryUtils(&telemetry.TelemetryUtils{
 		Logger:      logger,
 		ServiceName: cfg.AppName,
 		AppEnv:      cfg.Environment,
@@ -112,10 +65,8 @@ func (app *App) newApp(cfg *config.Config, l log.Logger) {
 		Ctx:         ctx,
 	})
 
-	app.fastCache = db.NewDirtyCache(logger, &app.cache, cfg.AppName)
-	app.networkOps = networks.NewNetworkOps(cfg.AppName, logger)
-	app.repos = repositories.NewRepositories(app.db, app.cache, logger, app.fastCache, app.clickhouseDb)
-	app.services = services.NewServices(cfg, app.db, app.repos, app.cache, logger)
+	app.repos = repositories.NewRepositories(app.db, logger)
+	app.services = services.NewServices(cfg, app.db, app.repos, logger)
 	app.controllers = controllers.NewControllers(cfg, logger, app.services)
 	app.middlewares = middlewares.NewMiddlewares(cfg, app.repos)
 	app.router = app.setUpHandlers(cfg, logger)
@@ -150,20 +101,6 @@ func (app *App) NewApplication(cfg *config.Config, logger log.Logger) {
 	app.start(cfg, logger)
 
 	defer app.destroy(logger)
-}
-
-func (app *App) newSQSClient(cfg *config.Config, logger log.Logger) {
-
-	ctx := context.Background()
-
-	logger.Infof("Will setup SQS/SNS client")
-
-	app.sqsClient = commonClients.NewClientSqs(&commonClients.SqsConfig{
-		Ctx:     ctx,
-		Region:  cfg.SQS.Region,
-		Logger:  logger,
-		EnvName: global.Environment(cfg.Environment),
-	})
 }
 
 func (app *App) destroy(logger log.Logger) {

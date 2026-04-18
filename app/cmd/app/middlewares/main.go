@@ -1,13 +1,12 @@
 package middlewares
 
 import (
-	"app/ontology/internal/config"
-	"app/ontology/internal/repositories"
+	"app/Saranam/internal/config"
+	"app/Saranam/internal/repositories"
 )
 
 type Middlewares struct {
-	Idempotency MiddlewareIdempotencyMethods
-	Cors        MiddlewareCorsMethods
+	Cors MiddlewareCorsMethods
 }
 
 func NewMiddlewares(cfg *config.Config, r *repositories.Repositories) *Middlewares {
@@ -16,7 +15,6 @@ func NewMiddlewares(cfg *config.Config, r *repositories.Repositories) *Middlewar
 		Repositories: *r,
 	}
 	return &Middlewares{
-		Idempotency: NewMiddlewareIdempotency(access),
-		Cors:        NewMiddlewareCors(access),
+		Cors: NewMiddlewareCors(access),
 	}
 }

@@ -32,5 +32,5 @@ if [ "$CONFIG_FILE" != "local.example.yml" ]; then
   fi
 fi
 
-echo "Running Binary: $ontology"
+echo "Running Binary: $Saranam"
 /go/bin/main-linux --config "$CONFIG_PATH/$CONFIG_FILE"

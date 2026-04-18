@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"app/ontology/internal/config"
-	"app/ontology/internal/services"
-
-	"bitbucket.org/fyscal/be-commons/pkg/log"
+	"app/Saranam/internal/config"
+	"app/Saranam/internal/services"
+	"app/Saranam/pkg/log"
 )
 
 type Controllers struct {

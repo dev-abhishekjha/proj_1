@@ -19,7 +19,7 @@
 │   │   │   └── 🐹 types.go
 │   │   ├── 🐹 app.go
 │   │   ├── 🐹 routes.go
-│   │   └── 🐹 routes_ontology.go
+│   │   └── 🐹 routes_Saranam.go
 │   └── 📁 server
 │       └── 🐹 main.go
 ├── 📁 config
@@ -44,9 +44,9 @@
 │   │   ├── 🐹 repo_health.go
 │   │   └── 🐹 types.go
 │   ├── 📁 requests
-│   │   └── 🐹 requests_ontology.go
+│   │   └── 🐹 requests_Saranam.go
 │   ├── 📁 response
-│   │   ├── 🐹 error_ontology.go
+│   │   ├── 🐹 error_Saranam.go
 │   │   ├── 🐹 errors.go
 │   │   └── 🐹 response.go
 │   └── 📁 services

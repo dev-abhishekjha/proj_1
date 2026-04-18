@@ -1,17 +1,11 @@
 package middlewares
 
 import (
-	"app/ontology/internal/config"
-	"app/ontology/internal/repositories"
-
-	"bitbucket.org/fyscal/be-commons/pkg/db"
-	"bitbucket.org/fyscal/be-commons/pkg/log"
+	"app/Saranam/internal/config"
+	"app/Saranam/internal/repositories"
 )
 
 type MiddlewareAccess struct {
 	Cfg          *config.Config
-	Db           *db.Store
-	Cache        db.CacheStoreMethods
-	Logger       log.Logger
 	Repositories repositories.Repositories
 }

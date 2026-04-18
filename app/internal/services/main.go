@@ -1,22 +1,20 @@
 package services
 
 import (
-	"app/ontology/internal/config"
-	"app/ontology/internal/repositories"
-
-	"bitbucket.org/fyscal/be-commons/pkg/db"
-	"bitbucket.org/fyscal/be-commons/pkg/log"
+	"app/Saranam/internal/config"
+	"app/Saranam/internal/repositories"
+	"app/Saranam/pkg/db"
+	"app/Saranam/pkg/log"
 )
 
 type Services struct {
 	Health ServiceHealthMethods
 }
 
-func NewServices(cfg *config.Config, db *db.Store, r *repositories.Repositories, cs db.CacheStoreMethods, l log.Logger) *Services {
+func NewServices(cfg *config.Config, store *db.Store, r *repositories.Repositories, l log.Logger) *Services {
 	access := &ServiceAccess{
 		Cfg:          cfg,
-		Db:           db,
-		Cache:        cs,
+		Db:           store,
 		Logger:       l,
 		Repositories: *r,
 	}

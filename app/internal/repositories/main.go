@@ -1,22 +1,18 @@
 package repositories
 
 import (
-	"bitbucket.org/fyscal/be-commons/pkg/clickhouse"
-	"bitbucket.org/fyscal/be-commons/pkg/db"
-	"bitbucket.org/fyscal/be-commons/pkg/log"
+	"app/Saranam/pkg/db"
+	"app/Saranam/pkg/log"
 )
 
 type Repositories struct {
 	Health RepositoryHealthMethods
 }
 
-func NewRepositories(pos *db.Store, cacheDb db.CacheStoreMethods, logger log.Logger, fastCache db.DirtyCacheMethods, clickhouseDb *clickhouse.Store) *Repositories {
+func NewRepositories(pos *db.Store, logger log.Logger) *Repositories {
 	access := &RepositoryAccess{
-		Db:           pos,
-		Cache:        cacheDb,
-		Logger:       logger,
-		FastCache:    fastCache,
-		ClickHouseDb: clickhouseDb,
+		Db:     pos,
+		Logger: logger,
 	}
 
 	return &Repositories{

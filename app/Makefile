@@ -78,7 +78,7 @@ lint: fmt vet ## Run formatters and linters
 
 .PHONY: clean-install
 clean-install: ## clean install dependencies
-	@GOPRIVATE="app/ontology" go mod tidy
+	@GOPRIVATE="app/Saranam" go mod tidy
 
 .PHONY: migrate-new
 migrate-new: ## create a new database migration

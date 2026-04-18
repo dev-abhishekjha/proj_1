@@ -1,7 +1,7 @@
 package app
 
 import (
-	"app/ontology/cmd/app/middlewares"
+	"app/Saranam/cmd/app/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
