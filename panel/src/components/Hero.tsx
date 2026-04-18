@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const heroSlides = [
   "/deities_1.jpeg",
@@ -13,37 +13,36 @@ const heroSlides = [
   "/deities_8.jpeg",
 ];
 
-function createParticles() {
-  if (typeof window === "undefined") return;
-  const container = document.getElementById("particles");
-  if (!container) return;
-  container.innerHTML = "";
-  for (let i = 0; i < 24; i++) {
-    const p = document.createElement("div");
-    const size = Math.random() * 3 + 1;
-    p.style.width = `${size}px`;
-    p.style.height = `${size}px`;
-    p.style.left = `${Math.random() * 100}%`;
-    p.style.bottom = `${Math.random() * 20}%`;
-    p.style.animationDuration = `${10 + Math.random() * 12}s`;
-    p.style.animationDelay = `${Math.random() * 10}s`;
-    p.className = "particle";
-    container.appendChild(p);
-  }
-}
+const parseTimeToMinutes = (timeStr: string) => {
+  const [time, modifier] = timeStr.split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+  if (!minutes) minutes = 0;
+  if (modifier === "PM" && hours < 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+  return hours * 60 + minutes;
+};
 
 export default function Hero() {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   useEffect(() => {
-    const runParticles = () => createParticles();
-
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(runParticles);
-      return;
-    }
-
-    const timeoutId = globalThis.setTimeout(runParticles, 1);
-    return () => globalThis.clearTimeout(timeoutId);
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
   }, []);
+
+  const currentMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+
+  const isTempleOpen = useMemo(() => {
+    const morningOpen = parseTimeToMinutes("4:30 AM");
+    const morningClose = parseTimeToMinutes("12:00 PM");
+    const eveningOpen = parseTimeToMinutes("4:00 PM");
+    const eveningClose = parseTimeToMinutes("9:30 PM");
+
+    return (
+      (currentMinutes >= morningOpen && currentMinutes <= morningClose) ||
+      (currentMinutes >= eveningOpen && currentMinutes <= eveningClose)
+    );
+  }, [currentMinutes]);
 
   return (
     <section
@@ -65,198 +64,137 @@ export default function Hero() {
               alt="ISKCON Greater Noida deity darshan"
               fill
               priority={index < 2}
+              sizes="100vw"
               className="object-cover object-center"
             />
           </div>
         ))}
       </div>
-      <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(59,32,10,0.45)_0%,rgba(77,45,13,0.2)_26%,rgba(245,232,205,0.74)_72%,rgba(247,240,226,0.96)_100%)]" />
-      <div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(183,121,31,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(183,121,31,0.06) 1px, transparent 1px)",
-          backgroundSize: "88px 88px",
-        }}
-      />
-      <div
-        id="particles"
-        className="absolute left-0 bottom-0 w-full h-full z-10"
-      />
-      <div className="absolute left-[-8rem] top-[8rem] h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(217,119,6,0.18)_0%,_rgba(217,119,6,0)_70%)] blur-2xl" />
-      <div className="absolute bottom-[-4rem] right-[-6rem] h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(183,121,31,0.16)_0%,_rgba(183,121,31,0)_72%)] blur-2xl" />
-      <div className="hero-content z-20 mx-auto flex max-w-[840px] flex-col items-center px-6">
-        <div className="animate-fadeDown inline-flex items-center gap-2 rounded-full border border-[var(--border-gold)] bg-[rgba(255,252,247,0.88)] px-4 py-1.5 shadow-[var(--shadow-soft)] backdrop-blur">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--accent-gold)] shadow-[0_0_10px_rgba(183,121,31,0.45)]" />
-          <span className="font-cinzel text-[10px] tracking-widest uppercase text-[var(--accent-gold)]">
-            Sri Sri Gaur Nataraj Dayal Nitai Temple · Greater Noida
+
+      {/* Improved Gradient Overlays */}
+      <div className="absolute inset-0 z-0 bg-[linear-gradient(180deg,rgba(45,31,14,0.4)_0%,rgba(45,31,14,0.15)_25%,rgba(253,248,240,0.6)_70%,rgba(253,248,240,1)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[var(--bg)] to-transparent z-0" />
+
+      <div className="hero-content z-20 mx-auto flex max-w-[880px] flex-col items-center px-6">
+        {/* Live Status Badge */}
+        <div className="animate-fadeDown inline-flex items-center gap-3 rounded-full border border-[var(--border-gold)] bg-white/90 px-4 py-2 shadow-lg backdrop-blur-sm mb-6">
+          <div
+            className={`h-2 w-2 rounded-full ${isTempleOpen ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" : "bg-red-500"} animate-pulse`}
+          />
+          <span className="font-display text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-primary)]">
+            {isTempleOpen ? "Temple Open Now" : "Temple Currently Closed"}
+            <span className="mx-2 opacity-30">|</span>
+            <span className="text-[var(--accent-gold)]">
+              {isTempleOpen
+                ? currentMinutes < 720
+                  ? "Closes 12:00 PM"
+                  : "Closes 9:30 PM"
+                : currentMinutes < 270
+                  ? "Opens 4:30 AM"
+                  : "Opens 4:00 PM"}
+            </span>
           </span>
         </div>
-        <h1 className="animate-fadeUp delay-200 mt-6 bg-gradient-to-r from-[#5e3711] via-[var(--accent-gold)] to-[var(--accent-saffron)] bg-clip-text font-cinzel text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-tight text-transparent">
+
+        <h1 className="animate-fadeUp delay-200 bg-gradient-to-b from-[var(--text-primary)] to-[var(--accent-saffron)] bg-clip-text font-display text-[clamp(3rem,8vw,5.5rem)] font-bold leading-[1.1] text-transparent tracking-tight">
           ISKCON
           <br />
           Greater Noida
         </h1>
-        <div className="hero-deity animate-fadeUp delay-350 mt-3 font-crimson text-[clamp(1.1rem,2vw,1.4rem)] italic text-[var(--accent-gold)] opacity-85">
-          Experience Divine Bliss Through Devotion, Kirtan & Prasadam
+
+        <div className="animate-fadeUp delay-350 mt-6 font-display text-[clamp(1.2rem,2.5vw,1.8rem)] italic text-[var(--accent-gold)] font-medium">
+          Experience Divine Bliss Through Devotion
         </div>
-        <div className="hero-sub animate-fadeUp delay-500 mx-auto mt-4 max-w-[560px] text-[1.1rem] leading-[1.8] text-[var(--text-secondary)]">
-          Spreading Krishna consciousness through devotional service, cultural
-          programs, and community welfare since 2015
+
+        <div className="animate-fadeUp delay-500 mx-auto mt-6 max-w-[620px] text-[1.15rem] leading-relaxed text-[var(--text-secondary)] font-medium">
+          A spiritual oasis in the heart of Greater Noida, dedicated to
+          spreading the message of peace, love, and devotion.
         </div>
-        <div className="hero-ctas animate-fadeUp delay-650 mt-8 flex flex-wrap justify-center gap-4">
+
+        <div className="hero-ctas animate-fadeUp delay-650 mt-10 flex flex-wrap justify-center gap-5">
           <a
             href="#visit-guide"
-            className="rounded-[10px] border border-[var(--border-gold)] bg-[rgba(255,252,247,0.9)] px-7 py-3 font-cinzel text-[0.8rem] font-medium uppercase tracking-wider text-[var(--accent-gold)] shadow-[0_12px_28px_rgba(183,121,31,0.12)] hover:-translate-y-0.5 hover:bg-[#fff7ea]"
+            className="min-w-[200px] rounded-xl bg-[var(--accent-saffron)] px-8 py-4 font-display text-[0.9rem] font-bold uppercase tracking-widest text-white shadow-xl hover:-translate-y-1 hover:brightness-110 active:scale-95 transition-all"
           >
             Plan Your Visit
           </a>
           <a
-            href="#programs"
-            className="rounded-[10px] bg-[var(--accent-saffron)] px-7 py-3 font-cinzel text-[0.8rem] font-medium uppercase tracking-wider text-white shadow-[0_12px_28px_rgba(217,119,6,0.25)] hover:-translate-y-0.5 hover:brightness-105"
-          >
-            Upcoming Programs ↗
-          </a>
-          <a
             href="#donate"
-            className="rounded-[10px] bg-gradient-to-r from-[var(--accent-gold)] to-[#d9a441] px-7 py-3 font-cinzel text-[0.8rem] font-medium uppercase tracking-wider text-[#fffaf3] shadow-[0_12px_28px_rgba(183,121,31,0.22)] hover:-translate-y-0.5 hover:brightness-105"
+            className="min-w-[200px] rounded-xl border-2 border-[var(--accent-gold)] bg-white/50 px-8 py-4 font-display text-[0.9rem] font-bold uppercase tracking-widest text-[var(--accent-gold)] shadow-md hover:-translate-y-1 hover:bg-[var(--accent-gold)] hover:text-white active:scale-95 transition-all"
           >
             Donate Now
           </a>
+          <a
+            href="#programs"
+            className="w-full sm:w-auto font-display text-[0.85rem] font-bold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--accent-gold)] transition-colors py-2"
+          >
+            Upcoming Programs ↗
+          </a>
         </div>
-        <div className="hero-mantra-strip animate-fadeUp delay-800 mt-10 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[rgba(255,252,247,0.74)] py-4 shadow-[var(--shadow-soft)]">
-          <div className="mantra-scroll flex gap-12 whitespace-nowrap animate-scrollMantra">
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Hare Krishna
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Krishna |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Krishna Krishna
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Hare |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Hare Rama
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Rama |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Rama Rama
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Hare | ✦
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Hare Krishna
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Krishna |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Krishna Krishna
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Hare |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Hare Rama
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Rama |
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--text-muted)]">
-              Rama Rama
-            </span>
-            <span className="font-cinzel text-[0.82rem] tracking-widest uppercase text-[var(--accent-gold)]">
-              | Hare Hare | ✦
-            </span>
+
+        {/* Improved Mantra Strip */}
+        <div className="hero-mantra-strip animate-fadeUp delay-800 mt-12 w-full overflow-hidden rounded-2xl border border-[var(--border)] bg-white/60 py-5 shadow-inner backdrop-blur-[2px]">
+          <div className="mantra-scroll flex gap-16 whitespace-nowrap animate-scrollMantra">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex gap-16 items-center">
+                <span className="font-display text-[1.1rem] tracking-[0.1em] font-medium text-[var(--text-secondary)]">
+                  HARE KRISHNA HARE KRISHNA
+                </span>
+                <span className="font-display text-[1.1rem] tracking-[0.1em] font-bold text-[var(--accent-saffron)]">
+                  KRISHNA KRISHNA HARE HARE
+                </span>
+                <span className="font-display text-[1.1rem] tracking-[0.1em] font-medium text-[var(--text-secondary)]">
+                  HARE RAMA HARE RAMA
+                </span>
+                <span className="font-display text-[1.1rem] tracking-[0.1em] font-bold text-[var(--accent-gold)]">
+                  RAMA RAMA HARE HARE
+                </span>
+                <span className="text-[var(--accent-rose)] opacity-40">✦</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
       <style jsx>{`
         .hero-slide {
           opacity: 0;
           animation: heroFade 32s infinite;
-          transform: scale(1.03);
-        }
-        .particle {
-          position: absolute;
-          background: var(--accent-gold);
-          border-radius: 50%;
-          box-shadow: 0 0 8px rgba(183, 121, 31, 0.35);
-          animation: floatUp linear infinite;
-          opacity: 0.35;
         }
         @keyframes heroFade {
-          0% {
-            opacity: 0;
-            transform: scale(1.06);
-          }
-          6% {
-            opacity: 1;
-          }
-          18% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          25% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1);
-          }
-        }
-        @keyframes floatUp {
-          0% {
-            transform: translateY(0) scale(0.7);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          80% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100vh) scale(1.5);
-            opacity: 0;
-          }
+          0% { opacity: 0; transform: scale(1.08); }
+          5% { opacity: 1; }
+          20% { opacity: 1; transform: scale(1); }
+          25% { opacity: 0; }
+          100% { opacity: 0; }
         }
         .animate-fadeDown {
-          animation: fadeDown 0.7s cubic-bezier(.4,0,.2,1) both;
+          animation: fadeDown 0.8s cubic-bezier(.4,0,.2,1) both;
         }
         .animate-fadeUp {
-          animation: fadeUp 0.7s cubic-bezier(.4,0,.2,1) both;
+          animation: fadeUp 0.8s cubic-bezier(.4,0,.2,1) both;
         }
         .delay-200 { animation-delay: 0.2s; }
         .delay-350 { animation-delay: 0.35s; }
         .delay-500 { animation-delay: 0.5s; }
         .delay-650 { animation-delay: 0.65s; }
         .delay-800 { animation-delay: 0.8s; }
+        
         @keyframes fadeDown {
-          0% { opacity: 0; transform: translateY(-22px); }
+          0% { opacity: 0; transform: translateY(-30px); }
           100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeUp {
-          0% { opacity: 0; transform: translateY(22px); }
+          0% { opacity: 0; transform: translateY(30px); }
           100% { opacity: 1; transform: translateY(0); }
         }
+        
         .animate-scrollMantra {
-          animation: scrollMantra 22s linear infinite;
+          animation: scrollMantra 40s linear infinite;
         }
         @keyframes scrollMantra {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
-        }
-        @media (max-width: 768px) {
-          .hero-mantra-strip {
-            border-radius: 24px;
-          }
         }
       `}</style>
     </section>

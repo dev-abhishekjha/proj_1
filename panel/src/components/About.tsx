@@ -1,148 +1,113 @@
 "use client";
 
-import { useState } from "react";
+import { BookOpen, Heart, Music, Utensils } from "lucide-react";
+import Image from "next/image";
 
 const practices = [
-  "Chanting the Hare Krishna maha-mantra",
-  "Daily deity worship and arati ceremonies",
-  "Study of Bhagavad-gita and Srimad-Bhagavatam",
-  "Prasadam distribution and community seva",
-];
-
-const timings = [
-  { label: "Morning", value: "4:30 AM - 12:00 PM" },
-  { label: "Evening", value: "4:00 PM - 9:30 PM" },
-  { label: "Main Arati", value: "Mangala 4:30 AM · Sandhya 6:45 PM" },
+  {
+    title: "Maha-mantra Chanting",
+    desc: "Experience peace through congregational chanting (Kirtan) and personal meditation.",
+    icon: Music,
+  },
+  {
+    title: "Deity Worship",
+    desc: "Witness the divine arati ceremonies and beautifully dressed deities throughout the day.",
+    icon: Heart,
+  },
+  {
+    title: "Scriptural Wisdom",
+    desc: "Dive deep into the teachings of Bhagavad-gita and Srimad-Bhagavatam classes.",
+    icon: BookOpen,
+  },
+  {
+    title: "Prasadam Seva",
+    desc: "Nourish your soul with sanctified vegetarian meals distributed daily with love.",
+    icon: Utensils,
+  },
 ];
 
 export default function About() {
-  const [expanded, setExpanded] = useState(false);
-
   return (
-    <section id="about" className="about section bg-[var(--bg)]">
+    <section id="about" className="about section bg-[var(--bg)] py-20">
       <div className="container mx-auto px-7">
-        <div className="mx-auto max-w-5xl rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)] md:p-12">
-          <div className="grid gap-10 lg:grid-cols-[1.3fr_0.9fr]">
-            <div className="flex flex-col gap-5">
-              <span className="font-cinzel text-[10px] uppercase tracking-widest text-[var(--accent-gold)]">
-                Our Temple
-              </span>
-              <h2 className="font-cinzel text-[clamp(1.9rem,3.2vw,2.6rem)] font-medium text-[var(--text-primary)]">
-                About ISKCON Greater Noida
-              </h2>
-              <p className="font-crimson text-[1.05rem] leading-8 text-[var(--text-secondary)]">
-                ISKCON Greater Noida is a center for devotional practice,
-                spiritual learning, kirtan, prasadam distribution, and community
-                service. Founded in the Gaudiya Vaishnava tradition, the temple
-                welcomes everyone seeking peace, wisdom, and a deeper connection
-                with Krishna.
-              </p>
-              <p className="font-crimson text-[1.05rem] leading-8 text-[var(--text-secondary)]">
-                The Greater Noida center was inaugurated on{" "}
-                <strong className="text-[var(--accent-gold)]">
-                  14 July 2015
-                </strong>{" "}
-                by{" "}
-                <strong className="text-[var(--accent-gold)]">
-                  His Holiness Lokanath Swami Maharaj
-                </strong>
-                , and continues to serve devotees and visitors through daily
-                darshan, classes, festivals, and outreach activities.
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {practices.map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-start gap-3 rounded-[12px] border border-[var(--border)] bg-[var(--elevated)] px-4 py-3"
-                  >
-                    <span className="mt-2 h-2 w-2 rounded-full bg-[var(--accent-gold)]" />
-                    <span className="font-crimson text-[0.98rem] text-[var(--text-secondary)]">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              {expanded ? (
-                <div className="space-y-4 rounded-[18px] border border-[var(--border)] bg-[#fffaf3] p-5">
-                  <p className="font-crimson text-[1rem] leading-8 text-[var(--text-secondary)]">
-                    The International Society for Krishna Consciousness was
-                    founded in{" "}
-                    <strong className="text-[var(--accent-gold)]">1966</strong>{" "}
-                    by His Divine Grace A.C. Bhaktivedanta Swami Prabhupada.
-                    ISKCON teaches bhakti-yoga, a life of loving devotional
-                    service centered on hearing, chanting, studying scripture,
-                    and honoring prasadam.
-                  </p>
-                  <p className="font-crimson text-[1rem] leading-8 text-[var(--text-secondary)]">
-                    At ISKCON Greater Noida, devotees gather for Mangala Arati,
-                    Bhagavatam and Gita classes, Sunday programs, youth
-                    engagement, festivals, and Food for Life service. The temple
-                    strives to make spiritual culture approachable for families,
-                    students, and first-time visitors alike.
-                  </p>
+        <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] items-center">
+          {/* Left: Image Container */}
+          <div className="relative group">
+            <div className="absolute -inset-4 bg-[var(--accent-gold)] opacity-[0.08] blur-2xl rounded-full" />
+            <div className="relative overflow-hidden rounded-[32px] border border-[var(--border)] bg-white shadow-xl">
+              <Image
+                src="/gallery1.jpeg"
+                alt="ISKCON Greater Noida Temple Altar"
+                width={600}
+                height={800}
+                className="h-[600px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(45,31,14,0.6)] via-transparent to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8">
+                <div className="font-display text-white text-2xl font-semibold">
+                  A Sanctuary of Peace
                 </div>
-              ) : null}
-              <div className="flex flex-wrap gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setExpanded((value) => !value)}
-                  className="rounded-[8px] border border-[var(--accent-gold)] px-6 py-3 font-cinzel text-[0.78rem] font-medium uppercase tracking-wider text-[var(--accent-gold)] hover:bg-[var(--accent-glow)]"
-                >
-                  {expanded ? "Read Less" : "Read More"}
-                </button>
-                <a
-                  href="#founder"
-                  className="rounded-[8px] border border-[var(--border-gold)] px-6 py-3 font-cinzel text-[0.78rem] font-medium uppercase tracking-wider text-[var(--accent-gold)] hover:bg-[var(--accent-glow)]"
-                >
-                  Meet Our Founder ↗
-                </a>
-                <a
-                  href="#connect"
-                  className="rounded-[8px] bg-[var(--accent-saffron)] px-6 py-3 font-cinzel text-[0.78rem] font-medium uppercase tracking-wider text-white shadow-[0_12px_24px_rgba(217,119,6,0.22)] hover:-translate-y-0.5 hover:brightness-105"
-                >
-                  Join Our Community ↗
-                </a>
+                <div className="mt-2 h-1 w-12 bg-[var(--accent-gold)]" />
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-col gap-5 rounded-[20px] border border-[var(--border)] bg-[#fffaf2] p-6">
-              <div>
-                <span className="font-cinzel text-[10px] uppercase tracking-widest text-[var(--accent-saffron)]">
-                  Temple Timings
+          {/* Right: Content Container */}
+          <div className="flex flex-col gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-[var(--accent-gold)]" />
+                <span className="font-display text-[12px] uppercase tracking-[0.2em] text-[var(--accent-gold)] font-bold">
+                  Established 2015
                 </span>
-                <h3 className="mt-2 font-cinzel text-[1.5rem] text-[var(--text-primary)]">
-                  Visit for Darshan
-                </h3>
               </div>
-              <div className="space-y-3">
-                {timings.map((timing) => (
-                  <div
-                    key={timing.label}
-                    className="rounded-[14px] border border-[var(--border)] bg-[var(--elevated)] px-4 py-4"
-                  >
-                    <div className="font-cinzel text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
-                      {timing.label}
-                    </div>
-                    <div className="mt-1 font-crimson text-[1.05rem] text-[var(--text-primary)]">
-                      {timing.value}
-                    </div>
+              <h2 className="font-display text-[clamp(2.2rem,4vw,3.2rem)] font-bold text-[var(--text-primary)] leading-tight">
+                About ISKCON <br />
+                <span className="text-[var(--accent-saffron)]">
+                  Greater Noida
+                </span>
+              </h2>
+              <p className="font-body text-[1.1rem] leading-relaxed text-[var(--text-secondary)]">
+                Inaugurated on 14 July 2015 by HH Lokanath Swami Maharaj, ISKCON
+                Greater Noida serves as a vibrant center for spiritual awakening
+                and community welfare in the heart of the city.
+              </p>
+            </div>
+
+            {/* Icon Grid */}
+            <div className="grid gap-5 sm:grid-cols-2">
+              {practices.map((item) => (
+                <div
+                  key={item.title}
+                  className="group flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[var(--accent-gold)] hover:shadow-md"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--bg)] text-[var(--accent-gold)] group-hover:bg-[var(--accent-gold)] group-hover:text-white transition-colors">
+                    <item.icon className="w-5 h-5" />
                   </div>
-                ))}
-              </div>
-              <div className="rounded-[14px] border border-[var(--border)] bg-[rgba(217,119,6,0.08)] px-4 py-4">
-                <div className="font-cinzel text-[11px] uppercase tracking-widest text-[var(--accent-gold)]">
-                  Quick Note
+                  <div>
+                    <h4 className="font-display text-lg font-bold text-[var(--text-primary)]">
+                      {item.title}
+                    </h4>
+                    <p className="mt-1 text-sm leading-relaxed text-[var(--text-muted)]">
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 font-crimson text-[0.98rem] leading-7 text-[var(--text-secondary)]">
-                  All are welcome. For the full daily schedule and ceremony
-                  details, open the temple timings section below.
-                </p>
-              </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-4 pt-4">
               <a
-                href="#timings"
-                className="inline-flex items-center justify-center rounded-[8px] bg-[var(--accent-gold)] px-6 py-3 font-cinzel text-[0.78rem] font-medium uppercase tracking-wider text-white shadow-[0_12px_24px_rgba(183,121,31,0.18)] hover:-translate-y-0.5 hover:brightness-105"
+                href="#connect"
+                className="rounded-xl bg-[var(--accent-saffron)] px-8 py-4 font-display text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
               >
-                View Full Timings ↗
+                Join Our Community ↗
+              </a>
+              <a
+                href="#founder"
+                className="rounded-xl border-2 border-[var(--border-gold)] bg-transparent px-8 py-4 font-display text-xs font-bold uppercase tracking-widest text-[var(--accent-gold)] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-gold)] hover:text-white active:scale-95"
+              >
+                Meet Our Founder
               </a>
             </div>
           </div>

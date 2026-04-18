@@ -34,9 +34,9 @@ export default function Home() {
       <Shloka />
       <Donate />
       <VedicCalendar />
+      <FAQ />
       <Connect />
       <TempleMap />
-      <FAQ />
       <CTABanner />
       <Footer />
       <FloatingActionButtons />

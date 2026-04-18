@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const deities = [
   { src: "/deities_1.jpeg", alt: "Sri Sri Gaur Nataraj Dayal Nitai" },
@@ -52,12 +52,14 @@ export default function DeitiesSlider() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent opacity-60" />
             <button
+              type="button"
               onClick={prev}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center text-[var(--accent-gold)] hover:bg-[var(--accent-gold)] hover:text-[var(--bg)] transition-all duration-200"
             >
               ‹
             </button>
             <button
+              type="button"
               onClick={next}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[var(--elevated)] border border-[var(--border)] flex items-center justify-center text-[var(--accent-gold)] hover:bg-[var(--accent-gold)] hover:text-[var(--bg)] transition-all duration-200"
             >

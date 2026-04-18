@@ -1,85 +1,99 @@
 "use client";
 
+import { Quote } from "lucide-react";
 import Image from "next/image";
 
 const prabhupadaMilestones = [
-  "Founded ISKCON in 1966 to share Krishna-bhakti around the world.",
-  "Translated and commented on Bhagavad-gita and Srimad-Bhagavatam.",
-  "Established the standard of kirtan, prasadam, deity worship, and daily sadhana in ISKCON temples.",
+  "Founded ISKCON in 1966 to share Krishna-bhakti globally.",
+  "Translated and commented on the Bhagavad-gita and Srimad-Bhagavatam.",
+  "Established the standards of kirtan, deity worship, and daily sadhana.",
 ];
 
 export default function FounderAcharya() {
   return (
-    <section id="founder" className="bg-[var(--bg)] py-24">
+    <section id="founder" className="bg-[var(--bg)] py-20 overflow-hidden">
       <div className="container mx-auto px-7">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[28px] border border-[var(--border)] bg-[linear-gradient(160deg,#fffaf2_0%,#f0e0c1_100%)] p-8 shadow-[var(--shadow-soft)] lg:p-10">
-            <div className="relative mb-6 overflow-hidden rounded-[24px] border border-[rgba(255,255,255,0.45)] bg-[#f8ecd7]">
-              <div className="relative aspect-[5/4] w-full">
+        <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] items-center">
+          {/* Left: Circular Portrait */}
+          <div className="relative flex justify-center lg:justify-end">
+            <div className="absolute -inset-8 bg-[radial-gradient(circle,var(--accent-gold)_0%,transparent 70%)] opacity-[0.05] animate-slowSpin" />
+            <div className="relative h-[320px] w-[320px] md:h-[420px] md:w-[420px] flex-shrink-0">
+              {/* Decorative Rings */}
+              <div className="absolute inset-0 rounded-full border-2 border-[var(--accent-gold)] border-dashed opacity-20 animate-slowSpin" />
+              <div className="absolute inset-4 rounded-full border border-[var(--border)] opacity-40" />
+
+              <div className="absolute inset-8 overflow-hidden rounded-full border-4 border-white shadow-2xl">
                 <Image
                   src="/prabhupada.jpeg"
-                  alt="Srila Prabhupada"
+                  alt="Srila Prabhupada - Founder-Acharya of ISKCON"
                   fill
                   priority
                   className="object-cover object-top"
                 />
               </div>
+
+              {/* Floating Badge */}
+              <div className="absolute -bottom-2 right-12 md:right-16 bg-white border border-[var(--border)] rounded-2xl p-4 shadow-lg z-20">
+                <div className="font-display text-[10px] uppercase tracking-widest text-[var(--accent-saffron)] font-bold">
+                  Founder-Acharya
+                </div>
+                <div className="mt-1 font-display text-sm font-bold text-[var(--text-primary)]">
+                  His Divine Grace
+                </div>
+              </div>
             </div>
-            <div className="font-cinzel text-[11px] uppercase tracking-[0.14em] text-[var(--accent-saffron)]">
-              Founder-Acharya
-            </div>
-            <h2 className="mt-4 font-cinzel text-[clamp(2rem,3.4vw,2.8rem)] font-semibold text-[var(--text-primary)]">
-              Srila Prabhupada
-            </h2>
-            <p className="mt-4 font-crimson text-[1.06rem] leading-8 text-[var(--text-secondary)]">
-              His Divine Grace A.C. Bhaktivedanta Swami Prabhupada is the
-              founder-acharya of ISKCON. Every temple, class, kirtan, book
-              table, and prasadam distribution effort stands on the mission he
-              carried from Vrindavan to the world.
-            </p>
-            <blockquote className="mt-6 rounded-[22px] border border-[var(--border)] bg-[rgba(255,253,248,0.84)] p-6 font-crimson text-[1.12rem] italic leading-8 text-[var(--text-primary)]">
-              “Please come here, chant Hare Krishna, take prasadam, and your
-              life will become sublime.”
-            </blockquote>
-            <a
-              href="#about"
-              className="mt-6 inline-flex rounded-[10px] bg-[var(--accent-gold)] px-6 py-3 font-cinzel text-[0.78rem] uppercase tracking-[0.08em] text-white shadow-[0_12px_24px_rgba(183,121,31,0.18)] hover:-translate-y-0.5 hover:brightness-105"
-            >
-              Learn Our Tradition ↗
-            </a>
           </div>
 
-          <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)] lg:p-10">
-            <div className="font-cinzel text-[11px] uppercase tracking-[0.14em] text-[var(--accent-gold)]">
-              Why This Matters
+          {/* Right: Content */}
+          <div className="flex flex-col gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-px w-8 bg-[var(--accent-gold)]" />
+                <span className="font-display text-[12px] uppercase tracking-[0.2em] text-[var(--accent-gold)] font-bold">
+                  Our Tradition
+                </span>
+              </div>
+              <h2 className="font-display text-[clamp(2.5rem,4.5vw,3.5rem)] font-bold text-[var(--text-primary)] leading-tight">
+                Srila{" "}
+                <span className="text-[var(--accent-saffron)]">Prabhupada</span>
+              </h2>
+              <p className="font-body text-[1.1rem] leading-relaxed text-[var(--text-secondary)]">
+                His Divine Grace A.C. Bhaktivedanta Swami Prabhupada carried the
+                mission of Krishna-bhakti from the ancient soil of Vrindavan to
+                every corner of the world. Every temple, class, and kirtan in
+                ISKCON Greater Noida stands on the spiritual foundation he
+                established.
+              </p>
             </div>
-            <h3 className="mt-4 font-cinzel text-2xl text-[var(--text-primary)]">
-              A living connection to guru, sadhu, and sastra
-            </h3>
-            <div className="mt-6 space-y-4">
+
+            {/* Large Pull Quote */}
+            <div className="relative pl-10 py-4 border-l-4 border-[var(--accent-saffron)] bg-white/40 rounded-r-2xl shadow-sm">
+              <Quote className="absolute top-2 left-2 w-6 h-6 text-[var(--accent-saffron)] opacity-20" />
+              <blockquote className="font-display text-[1.4rem] md:text-[1.8rem] italic leading-relaxed text-[var(--text-primary)] font-medium">
+                “Please come here, chant Hare Krishna, take prasadam, and your
+                life will become sublime.”
+              </blockquote>
+            </div>
+
+            {/* Milestones / Timeline-lite */}
+            <div className="grid gap-4">
               {prabhupadaMilestones.map((milestone) => (
-                <div
-                  key={milestone}
-                  className="rounded-[18px] border border-[var(--border)] bg-[var(--elevated)] px-5 py-4"
-                >
-                  <div className="flex gap-3">
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-[var(--accent-gold)]" />
-                    <p className="font-crimson text-[1rem] leading-7 text-[var(--text-secondary)]">
-                      {milestone}
-                    </p>
-                  </div>
+                <div key={milestone} className="flex items-start gap-4">
+                  <div className="mt-2 h-2 w-2 rounded-full bg-[var(--accent-gold)] shadow-[0_0_8px_var(--accent-gold)] flex-shrink-0" />
+                  <p className="font-body text-[1rem] leading-relaxed text-[var(--text-secondary)]">
+                    {milestone}
+                  </p>
                 </div>
               ))}
             </div>
-            <div className="mt-6 rounded-[20px] border border-[var(--border)] bg-[#fffaf3] p-5">
-              <div className="font-cinzel text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
-                In This Temple
-              </div>
-              <p className="mt-3 font-crimson text-[1rem] leading-7 text-[var(--text-secondary)]">
-                Visitors will hear Srila Prabhupada’s teachings in classes, find
-                his books in outreach and gift areas, and experience the
-                devotional culture he established for congregational worship.
-              </p>
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <a
+                href="#about"
+                className="rounded-xl bg-[var(--accent-gold)] px-8 py-4 font-display text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-95"
+              >
+                Learn Our Tradition ↗
+              </a>
             </div>
           </div>
         </div>

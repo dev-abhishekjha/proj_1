@@ -1,5 +1,3 @@
-import React from "react";
-
 const stats = [
   { label: "Meals Daily", value: "500+", color: "var(--accent-gold)" },
   { label: "Active Volunteers", value: "50+", color: "var(--accent-saffron)" },

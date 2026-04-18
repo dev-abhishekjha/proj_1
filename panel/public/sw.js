@@ -1,13 +1,15 @@
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("iskcon-gn-v1").then((cache) =>
-      cache.addAll([
-        "/",
-        "/site.webmanifest",
-        "/logo.jpg",
-        "/deities_3.jpeg",
-      ]),
-    ),
+    caches
+      .open("iskcon-gn-v1")
+      .then((cache) =>
+        cache.addAll([
+          "/",
+          "/site.webmanifest",
+          "/logo.jpg",
+          "/deities_3.jpeg",
+        ]),
+      ),
   );
   self.skipWaiting();
 });

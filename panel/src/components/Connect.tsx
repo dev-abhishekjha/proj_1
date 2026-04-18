@@ -1,5 +1,6 @@
 "use client";
 
+import { Mail, MessageCircle, Send, User } from "lucide-react";
 import { useState } from "react";
 import { WHATSAPP_SUPPORT_URL } from "@/lib/temple-data";
 
@@ -64,124 +65,153 @@ export default function Connect() {
   };
 
   return (
-    <section id="connect" className="bg-[var(--bg)] py-24">
+    <section id="connect" className="bg-[var(--bg)] py-20">
       <div className="container mx-auto px-6">
         <div className="mb-16 text-center">
-          <p className="mb-2 font-cinzel text-sm uppercase tracking-[0.12em] text-[var(--accent-saffron)]">
-            Support by Email or WhatsApp
-          </p>
-          <h2 className="mb-4 font-cinzel text-3xl font-semibold lg:text-4xl">
-            <span className="bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-saffron)] bg-clip-text text-transparent">
-              Connect
-            </span>{" "}
-            <span className="text-[var(--text-primary)]">with Us</span>
+          <div className="flex justify-center items-center gap-2 mb-3">
+            <Send className="w-4 h-4 text-[var(--accent-saffron)]" />
+            <span className="font-display text-[10px] uppercase tracking-[0.2em] text-[var(--accent-saffron)] font-bold">
+              Get In Touch
+            </span>
+          </div>
+          <h2 className="font-display text-[clamp(2.2rem,4vw,3.2rem)] font-bold text-[var(--text-primary)] leading-tight">
+            Connect <span className="text-[var(--accent-gold)]">with Us</span>
           </h2>
-          <p className="mx-auto max-w-2xl leading-relaxed text-[var(--text-secondary)]">
-            Choose your preferred support method and send your query by email or
-            WhatsApp. Both options reach the temple team directly.
+          <p className="mx-auto mt-4 max-w-2xl font-body text-[1.1rem] leading-relaxed text-[var(--text-secondary)]">
+            Have a question? Choose your preferred way to reach us. Our team is
+            here to help you on your spiritual journey.
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
-            <h3 className="font-cinzel text-[1.35rem] text-[var(--text-primary)]">
-              Choose your support channel
-            </h3>
-            <p className="mt-4 font-crimson text-[1rem] leading-8 text-[var(--text-secondary)]">
-              Use either of the support channels below for darshan, seva,
-              donations, volunteering, or visit-related questions.
-            </p>
-            <div className="mt-6 grid gap-4">
-              <a
-                href={`mailto:${destinationEmail}`}
-                className="rounded-[16px] border border-[var(--border)] bg-[#fffaf3] p-5 hover:border-[var(--accent-gold)]"
-              >
-                <div className="font-cinzel text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
-                  Email Support
-                </div>
-                <div className="mt-2 font-crimson text-[1.1rem] text-[var(--accent-gold)]">
-                  {destinationEmail}
-                </div>
-              </a>
-              <a
-                href={WHATSAPP_SUPPORT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-[16px] border border-[var(--border)] bg-[#f0fff5] p-5 hover:border-[#25D366]"
-              >
-                <div className="font-cinzel text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
-                  WhatsApp Support
-                </div>
-                <div className="mt-2 font-crimson text-[1.1rem] text-[#1f8f49]">
-                  +91 98716 47891
-                </div>
-              </a>
+        <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="space-y-6">
+            <div className="rounded-[32px] border border-[var(--border)] bg-white p-8 shadow-sm">
+              <h3 className="font-display text-xl font-bold text-[var(--text-primary)] mb-6">
+                Support Channels
+              </h3>
+              <div className="space-y-4">
+                <a
+                  href={`mailto:${destinationEmail}`}
+                  className="group flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-5 transition-all hover:border-[var(--accent-gold)] hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[var(--accent-gold)] group-hover:bg-[var(--accent-gold)] group-hover:text-white transition-colors">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold">
+                      Email Us
+                    </div>
+                    <div className="mt-1 font-display text-base font-bold text-[var(--text-primary)]">
+                      {destinationEmail}
+                    </div>
+                  </div>
+                </a>
+
+                <a
+                  href={WHATSAPP_SUPPORT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-[#f0fff5] p-5 transition-all hover:border-[#25D366] hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                    <MessageCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <div className="font-display text-[10px] uppercase tracking-widest text-[#1f8f49] font-bold">
+                      WhatsApp Us
+                    </div>
+                    <div className="mt-1 font-display text-base font-bold text-[var(--text-primary)]">
+                      +91 98716 47891
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div className="rounded-[32px] border border-[var(--accent-gold)] bg-gradient-to-br from-[#fff9f0] to-[#fdf2e2] p-8">
+              <h4 className="font-display text-lg font-bold text-[var(--text-primary)] mb-2">
+                Visiting for the first time?
+              </h4>
+              <p className="font-body text-sm leading-relaxed text-[var(--text-secondary)]">
+                We'd love to welcome you! Feel free to ask about our orientation
+                tours, introductory classes, or where to find delicious
+                prasadam.
+              </p>
             </div>
           </div>
 
-          <div className="rounded-[20px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-soft)]">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="supportMethod"
-                  className="mb-2 block font-cinzel text-sm uppercase tracking-[0.08em] text-[var(--text-secondary)]"
-                >
-                  Support Method *
-                </label>
-                <select
-                  id="supportMethod"
-                  name="supportMethod"
-                  value={formData.supportMethod}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--elevated)] px-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
-                >
-                  <option value="email">Email</option>
-                  <option value="whatsapp">WhatsApp</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-2 block font-cinzel text-sm uppercase tracking-[0.08em] text-[var(--text-secondary)]"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--elevated)] px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent-gold)] focus:outline-none"
-                  placeholder="Enter your full name"
-                />
-              </div>
+          <div className="rounded-[32px] border border-[var(--border)] bg-white p-8 md:p-10 shadow-sm">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="supportMethod"
+                    className="mb-2 block font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold"
+                  >
+                    Preferred Method *
+                  </label>
+                  <select
+                    id="supportMethod"
+                    name="supportMethod"
+                    value={formData.supportMethod}
+                    onChange={handleChange}
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                  >
+                    <option value="email">Send Email</option>
+                    <option value="whatsapp">Send WhatsApp Message</option>
+                  </select>
+                </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block font-cinzel text-sm uppercase tracking-[0.08em] text-[var(--text-secondary)]"
-                >
-                  Your Email *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--elevated)] px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent-gold)] focus:outline-none"
-                  placeholder="your.email@example.com"
-                />
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="mb-2 block font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold"
+                  >
+                    Your Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-3.5 w-4 h-4 text-[var(--text-muted)]" />
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] pl-11 pr-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                      placeholder="Name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold"
+                  >
+                    Your Email *
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-3.5 w-4 h-4 text-[var(--text-muted)]" />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] pl-11 pr-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                      placeholder="Email"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>
                 <label
                   htmlFor="queryType"
-                  className="mb-2 block font-cinzel text-sm uppercase tracking-[0.08em] text-[var(--text-secondary)]"
+                  className="mb-2 block font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold"
                 >
-                  Query Type *
+                  What can we help with? *
                 </label>
                 <select
                   id="queryType"
@@ -189,7 +219,7 @@ export default function Connect() {
                   value={formData.queryType}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--elevated)] px-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
                 >
                   <option value="">Select a query type</option>
                   {queryOptions.map((option) => (
@@ -200,34 +230,40 @@ export default function Connect() {
                 </select>
               </div>
 
-              {requiresCustomQuery ? (
+              {requiresCustomQuery && (
                 <div>
                   <label
                     htmlFor="query"
-                    className="mb-2 block font-cinzel text-sm uppercase tracking-[0.08em] text-[var(--text-secondary)]"
+                    className="mb-2 block font-display text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-bold"
                   >
-                    Enter Query *
+                    Detailed Query *
                   </label>
                   <textarea
                     id="query"
                     name="query"
                     value={formData.query}
                     onChange={handleChange}
-                    required={requiresCustomQuery}
-                    rows={6}
-                    className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--elevated)] px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent-gold)] focus:outline-none"
-                    placeholder="Write your question here..."
+                    required
+                    rows={4}
+                    className="w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--bg)] px-4 py-4 text-[var(--text-primary)] focus:border-[var(--accent-gold)] focus:outline-none"
+                    placeholder="Tell us more..."
                   />
                 </div>
-              ) : null}
+              )}
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-[var(--accent-saffron)] px-6 py-4 font-cinzel text-sm uppercase tracking-[0.08em] text-white shadow-[0_12px_24px_rgba(217,119,6,0.22)] hover:-translate-y-0.5 hover:brightness-105"
+                className="w-full rounded-xl bg-[var(--accent-saffron)] px-8 py-4 font-display text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2"
               >
-                {formData.supportMethod === "whatsapp"
-                  ? "Open WhatsApp ↗"
-                  : "Send Email ↗"}
+                {formData.supportMethod === "whatsapp" ? (
+                  <>
+                    <MessageCircle className="w-4 h-4" /> Open WhatsApp
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4" /> Send Message
+                  </>
+                )}
               </button>
             </form>
           </div>

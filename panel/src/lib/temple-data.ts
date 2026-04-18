@@ -39,16 +39,40 @@ export const sevaOptions = [
 
 export const vaishnavaHighlights = [
   {
-    date: "2026-03-29",
-    title: "Kamada Ekadashi",
-    type: "Ekadashi Focus",
-    note: "Observe fasting, japa, and hear hari-katha with the temple sangha.",
-  },
-  {
     date: "2026-04-13",
     title: "Varuthini Ekadashi",
-    type: "Upcoming Ekadashi",
-    note: "Temple parana timing should be confirmed locally before breaking fast.",
+    type: "Ekadashi",
+    note: "Observe fasting, extra japa, and hear hari-katha. Temple parana timing to be confirmed locally.",
+  },
+  {
+    date: "2026-04-27",
+    title: "Mohini Ekadashi",
+    type: "Ekadashi Focus",
+    note: "Auspicious fasting day. Plan for extra devotional service and reading.",
+  },
+  {
+    date: "2026-04-30",
+    title: "Narasimha Caturdashi",
+    type: "Major Festival",
+    note: "Appearance day of Lord Narasimhadeva. Fasting until dusk followed by grand feast.",
+  },
+  {
+    date: "2026-05-13",
+    title: "Apara Ekadashi",
+    type: "Ekadashi Focus",
+    note: "Observe fasting and focus on devotional hearing and chanting.",
+  },
+  {
+    date: "2026-05-27",
+    title: "Nirjala Ekadashi",
+    type: "Major Ekadashi",
+    note: "Total fast (even from water) for maximum spiritual benefit. Most important Ekadashi of the year.",
+  },
+  {
+    date: "2026-08-22",
+    title: "Sri Krishna Janmashtami",
+    type: "Grand Festival",
+    note: "Appearance day of Lord Krishna. Fasting until midnight, grand abhishek, and cultural programs.",
   },
 ];
 

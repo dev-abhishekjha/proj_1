@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const shlokas = [
   {
@@ -73,6 +73,7 @@ export default function Shloka() {
           <div className="flex gap-2 mt-2">
             {shlokas.map((s, i) => (
               <button
+                type="button"
                 key={s.label}
                 className={`shloka-btn font-cinzel text-xs px-4 py-2 rounded-full border transition-all duration-150 ${active === i ? "border-[var(--accent-gold)] text-[var(--accent-gold)] bg-[#00F5FF0A]" : "border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)]"}`}
                 onClick={() => handleToggle(i)}

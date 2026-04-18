@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 
 const quickCards = [
   {
@@ -19,7 +19,7 @@ const quickCards = [
     icon: "🍱",
     iconClass: "icon-gold",
     title: "Food for Life",
-    body: "500+ meals served daily · Join as a volunteer",
+    body: "200+ meals served daily · Join as a volunteer",
     link: { label: "Learn More →", href: "#ffl" },
   },
 ];
@@ -27,36 +27,29 @@ const quickCards = [
 export default function QuickInfo() {
   return (
     <section className="quick-section z-5 w-full border-t border-b border-[var(--border)] bg-[var(--border)] grid grid-cols-1 md:grid-cols-3 gap-[1px]">
-      {quickCards.map((card, i) => (
-        <div
+      {quickCards.map((card) => (
+        <a
           key={card.title}
-          className="quick-card group bg-[var(--surface)] p-8 flex flex-col gap-3 items-start hover:bg-[var(--elevated)] transition-colors duration-200 relative overflow-hidden cursor-pointer"
-          onClick={() => {
-            if (typeof window !== "undefined")
-              window.location.hash = card.link.href;
-          }}
+          href={card.link.href}
+          className="quick-card group bg-[var(--surface)] p-8 flex flex-col gap-3 items-start hover:bg-[var(--elevated)] transition-colors duration-200 relative overflow-hidden"
         >
           <div
             className={`icon-box ${card.iconClass} w-[38px] h-[38px] rounded-[9px] flex items-center justify-center text-[1.1rem] mb-2 border ${card.iconClass === "icon-gold" ? "bg-[#001A1E] border-[#00F5FF44]" : "bg-[#160B2E] border-[#8B5CF644]"}`}
           >
             {card.icon}
           </div>
-          <h3 className="font-cinzel text-[1.1rem] font-semibold text-[var(--text-primary)] mb-1">
+          <h3 className="font-display text-[1.1rem] font-bold text-[var(--text-primary)] mb-1">
             {card.title}
           </h3>
-          <div className="font-crimson text-[0.98rem] text-[var(--text-secondary)] mb-2">
+          <div className="font-body text-[0.98rem] text-[var(--text-secondary)] mb-2">
             {card.body}
           </div>
-          <a
-            href={card.link.href}
-            className="font-cinzel text-[10px] uppercase tracking-widest text-[var(--accent-gold)] mt-auto hover:underline"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="font-display text-[10px] font-bold uppercase tracking-widest text-[var(--accent-gold)] mt-auto group-hover:underline">
             {card.link.label}
-          </a>
+          </div>
           {/* Bottom border reveal on hover */}
           <span className="absolute left-0 bottom-0 h-[2px] w-full bg-[var(--accent-gold)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-        </div>
+        </a>
       ))}
     </section>
   );
